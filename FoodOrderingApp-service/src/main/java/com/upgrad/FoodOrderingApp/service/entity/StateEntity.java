@@ -9,6 +9,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "state")
+@NamedQueries(
+        @NamedQuery(name = "fetchStateByUUID", query = "SELECT s from StateEntity s WHERE  s.uuid = :uuid")
+)
 public class StateEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -51,14 +54,22 @@ public class StateEntity implements Serializable {
         this.stateName = stateName;
     }
 
+    public StateEntity() {
+    }
+
+    public StateEntity(@NotNull @Size(max = 200) String uuid, @Size(max = 30) String stateName) {
+        this.uuid = uuid;
+        this.stateName = stateName;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

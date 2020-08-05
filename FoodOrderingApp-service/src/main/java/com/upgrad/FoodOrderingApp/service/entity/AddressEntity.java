@@ -7,9 +7,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+
 @Entity
 @Table(name = "address")
-public class AddressEntity implements Serializable {
+public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressIdGenerator")
@@ -45,6 +46,12 @@ public class AddressEntity implements Serializable {
 
     @Column(name="active")
     private Integer active;
+
+    @ManyToOne
+    @JoinTable(name = "customer_address",
+            joinColumns = {@JoinColumn(name = "address_id")},
+            inverseJoinColumns = {@JoinColumn(name = "customer_id")})
+    private CustomerEntity customer;
 
     public Integer getId() {
         return id;
@@ -108,6 +115,19 @@ public class AddressEntity implements Serializable {
 
     public void setActive(Integer active) {
         this.active = active;
+    }
+
+    public CustomerEntity getCustomers() {
+        return customer;
+    }
+
+    public void setCustomers(CustomerEntity customer) {
+        this.customer = customer;
+    }
+
+    @Override
+    public int compareTo(AddressEntity i) {
+        return this.getId().compareTo(i.getId());
     }
 
     @Override
