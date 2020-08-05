@@ -21,4 +21,14 @@ public class CategoryDao {
             return null;
         }
     }
+
+    public CategoryEntity getCategoryById(final String categoryId) {
+        try {
+            return entityManager.createNamedQuery("Category.fetchCategoryItem", CategoryEntity.class)
+                    .setParameter("categoryId", categoryId)
+                    .getSingleResult();
+        }catch (NoResultException nre){
+            return null;
+        }
+    }
 }
