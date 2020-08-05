@@ -22,10 +22,18 @@ public enum GenericErrorCode implements ErrorCode {
     ATHR_001("ATHR-001","Customer is not Logged in."),
     ATHR_002("ATHR-002","Customer is logged out. Log in again to access this endpoint."),
     ATHR_003("ATHR-003","Your session is expired. Log in again to access this endpoint."),
+    ATHR_004("ATHR-004","You are not authorized to view/update/delete any one else's address"),
     UCR_001("UCR-001","Weak password!"),
     UCR_002("UCR-002","First name field should not be empty"),
     UCR_003("UCR-003","No field should be empty"),
     UCR_004("UCR-004","Incorrect old password!"),
+    SAR_001("SAR-001","No field can be empty"),
+    SAR_002("SAR-002","Invalid pincode"),
+    ANF_003("ANF-003","No address by this id"),
+    ANF_002("ANF-002","No state by this id"),
+    ANF_005("ANF-005","Address id can not be empty"),
+    CNF_001("CNF-001","Category id field should not be empty"),
+    CNF_002("CNF-002","No category by this id"),
     CPF_001("CPF-001","No coupon by this name"),
     CPF_002("CPF-001","Coupon name field should not be empty");
 

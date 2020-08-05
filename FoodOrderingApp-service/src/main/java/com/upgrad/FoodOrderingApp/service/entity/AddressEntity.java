@@ -6,10 +6,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Table(name = "address")
+@NamedQueries(
+        @NamedQuery(name = "fetchAddressById", query = "SELECT a FROM AddressEntity a WHERE a.uuid=:addressId")
+)
 public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id
     @Column(name = "id")
@@ -52,6 +57,9 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
             joinColumns = {@JoinColumn(name = "address_id")},
             inverseJoinColumns = {@JoinColumn(name = "customer_id")})
     private CustomerEntity customer;
+
+    @OneToMany(mappedBy = "address", fetch= FetchType.LAZY)
+    private List<OrderEntity> orders = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -119,6 +127,14 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
 
     public CustomerEntity getCustomers() {
         return customer;
+    }
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
     }
 
     public void setCustomers(CustomerEntity customer) {

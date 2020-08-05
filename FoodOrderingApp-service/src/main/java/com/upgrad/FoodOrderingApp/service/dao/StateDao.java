@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class StateDao {
@@ -20,6 +21,15 @@ public class StateDao {
         try {
             return entityManager.createNamedQuery("fetchStateByUUID", StateEntity.class)
                     .setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public List<StateEntity> getAllStates() {
+        try {
+            List<StateEntity> states = entityManager.createNamedQuery("fetchAllStates", StateEntity.class).getResultList();
+            return states;
         } catch (NoResultException nre) {
             return null;
         }

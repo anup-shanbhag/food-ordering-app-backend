@@ -65,7 +65,7 @@ public class OrderEntity implements Serializable {
     @EqualsExclude
     private CustomerEntity customer;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id",referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
