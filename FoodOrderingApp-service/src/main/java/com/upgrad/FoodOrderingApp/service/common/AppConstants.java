@@ -13,9 +13,11 @@ public class AppConstants {
     // Regular Expression to check  if email is valid
     public static final String REG_EXP_VALID_EMAIL = "^[a-zA-Z0-9]{3,3}[\\@]{1,1}[a-zA-Z0-9]{2,2}[\\.]{1,1}[a-zA-Z0-9]{2,2}$";
 
-    public static final Integer NUMBER_7 = 7;
+    public static final int TWO_2 = 2;
+    public static final Integer SEVEN_7 = 7;
     public static final Integer EIGHT_8 = 8;
     public static final Integer NUMBER_10 = 10;
     public static final String COLON = ":";
     public static final String HTTP_ACCESS_TOKEN_HEADER = "access-token";
+
 }
