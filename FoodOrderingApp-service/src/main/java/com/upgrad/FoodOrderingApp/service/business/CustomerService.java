@@ -35,9 +35,6 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity saveCustomer(final CustomerEntity customerEntity) throws SignUpRestrictedException{
         System.out.println(customerEntity.toString());
-        if(!validateMandatoryFields(customerEntity)){
-            throw new SignUpRestrictedException(SGR_005.getCode(), SGR_005.getDefaultMessage());
-        }
         if(!isValidEmail(customerEntity.getEmail())){
             throw new SignUpRestrictedException(SGR_002.getCode(), SGR_002.getDefaultMessage());
         }
@@ -109,35 +106,25 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomer(final CustomerEntity customerEntity) throws UpdateCustomerException {
-        if(customerEntity.getFirstName()!=null && !customerEntity.getFirstName().isEmpty()){
-            return customerDao.updateCustomer(customerEntity);
-        }
-        else{
-            throw new UpdateCustomerException(UCR_002.getCode(),UCR_002.getDefaultMessage());
-        }
+        return customerDao.updateCustomer(customerEntity);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomerPassword(final String oldPassword, final String newPassword, final CustomerEntity customerEntity) throws UpdateCustomerException {
-        if((oldPassword != null && !oldPassword.isEmpty()) && (newPassword != null && !newPassword.isEmpty())){
-            if(!isStrongPassword(newPassword)){
-                throw new UpdateCustomerException(UCR_001.getCode(),UCR_001.getDefaultMessage());
-            }
-            else{
-                final String encryptedOldPassword = PasswordCryptographyProvider.encrypt(oldPassword, customerEntity.getSalt());
-                if(encryptedOldPassword!=null && encryptedOldPassword.equals(customerEntity.getPassword())){
-                    final String[] encryptedText = passwordCryptographyProvider.encrypt(newPassword);
-                    customerEntity.setSalt(encryptedText[0]);
-                    customerEntity.setPassword(encryptedText[1]);
-                    return customerDao.updateCustomer(customerEntity);
-                }
-                else{
-                    throw new UpdateCustomerException(UCR_004.getCode(),UCR_004.getDefaultMessage());
-                }
-            }
+        if(!isStrongPassword(newPassword)){
+            throw new UpdateCustomerException(UCR_001.getCode(),UCR_001.getDefaultMessage());
         }
         else{
-            throw new UpdateCustomerException(UCR_003.getCode(), UCR_003.getDefaultMessage());
+            final String encryptedOldPassword = PasswordCryptographyProvider.encrypt(oldPassword, customerEntity.getSalt());
+            if(encryptedOldPassword!=null && encryptedOldPassword.equals(customerEntity.getPassword())){
+                final String[] encryptedText = passwordCryptographyProvider.encrypt(newPassword);
+                customerEntity.setSalt(encryptedText[0]);
+                customerEntity.setPassword(encryptedText[1]);
+                return customerDao.updateCustomer(customerEntity);
+            }
+            else{
+                throw new UpdateCustomerException(UCR_004.getCode(),UCR_004.getDefaultMessage());
+            }
         }
     }
 
@@ -166,12 +153,12 @@ public class CustomerService {
         return customerDao.getCustomerByContactNumber(contactNumber);
     }
 
-    private boolean validateMandatoryFields(final CustomerEntity customerEntity){
+    /*public boolean validateMandatoryFields(final CustomerEntity customerEntity){
         return (customerEntity.getContactNumber() != null && !customerEntity.getContactNumber().isEmpty()) &&
                 (customerEntity.getFirstName() != null && !customerEntity.getFirstName().isEmpty()) &&
                         (customerEntity.getEmail() != null && !customerEntity.getEmail().isEmpty()) &&
                                 (customerEntity.getPassword() != null && !customerEntity.getPassword().isEmpty());
-    }
+    }*/
 
     // This method users regular expressions to guage the strength of a user's
     // password returns password score
@@ -186,5 +173,7 @@ public class CustomerService {
     private boolean isValidEmail(final String email){
         return email.matches(AppConstants.REG_EXP_VALID_EMAIL);
     }
+
+
 
 }

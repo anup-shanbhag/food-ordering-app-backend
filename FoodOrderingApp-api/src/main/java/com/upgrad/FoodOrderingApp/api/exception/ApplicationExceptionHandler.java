@@ -35,6 +35,12 @@ public class ApplicationExceptionHandler {
                 new ErrorResponse().code(uce.getCode()).message(uce.getErrorMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCouponNotFoundException(CouponNotFoundException cnfe, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new ErrorResponse().code(cnfe.getCode()).message(cnfe.getErrorMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UnexpectedException.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(UnexpectedException ue, WebRequest webRequest) {
         return new ResponseEntity<>(

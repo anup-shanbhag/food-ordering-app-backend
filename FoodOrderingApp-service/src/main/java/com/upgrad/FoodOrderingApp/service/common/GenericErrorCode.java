@@ -33,7 +33,9 @@ public enum GenericErrorCode implements ErrorCode {
     ANF_002("ANF-002","No state by this id"),
     ANF_005("ANF-005","Address id can not be empty"),
     CNF_001("CNF-001","Category id field should not be empty"),
-    CNF_002("CNF-002","No category by this id");
+    CNF_002("CNF-002","No category by this id"),
+    CPF_001("CPF-001","No coupon by this name"),
+    CPF_002("CPF-001","Coupon name field should not be empty");
 
     private static final Map<String, GenericErrorCode> LOOKUP = new HashMap<String, GenericErrorCode>();
 
