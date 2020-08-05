@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,9 +32,9 @@ public class AddressService {
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity saveAddress(AddressEntity address, StateEntity state) throws AddressNotFoundException, SaveAddressException {
         if (addressFieldsEmpty(address))
-            throw new SaveAddressException("SAR-001", "No field can be empty");
+            throw new SaveAddressException(SAR_001.getCode(), SAR_001.getDefaultMessage());
         if (!validPincode(address.getPincode())) {
-            throw new SaveAddressException("SAR-002", "Invalid pincode");
+            throw new SaveAddressException(SAR_002.getCode(), SAR_002.getDefaultMessage());
         }
         address.setState(state);
 
@@ -53,23 +53,21 @@ public class AddressService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<StateEntity> getAllStates() {
 
-        List<StateEntity> states = stateDao.getAllStates();
-
-        return states;
+        return stateDao.getAllStates();
     }
 
     public AddressEntity getAddressByUUID(String addressId, CustomerEntity customerEntity)
             throws AddressNotFoundException, AuthorizationFailedException {
         if (addressId == null) {
-            throw new AddressNotFoundException("ANF-005","Address id can not be empty");
+            throw new AddressNotFoundException(ANF_005.getCode(), ANF_005.getDefaultMessage());
         }
         AddressEntity address = addressDao.getAddressByAddressId(addressId);
         if (address == null) {
-            throw new AddressNotFoundException("ANF-003", "No address by this id");
+            throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
         }
 
         if (!address.getCustomers().getUuid().equals(customerEntity.getUuid())) {
-            throw new AuthorizationFailedException("ATHR-004","You are not authorized to view/update/delete any one else's address");
+            throw new AuthorizationFailedException(ATHR_004.getCode(),ATHR_004.getDefaultMessage());
         }
         return address;
     }
@@ -87,7 +85,7 @@ public class AddressService {
     public StateEntity getStateByUUID(final String stateUUID) throws AddressNotFoundException {
         StateEntity state = stateDao.findStateByUUID(stateUUID);
         if (state == null) {
-            throw new AddressNotFoundException("ANF-002", "No state by this id");
+            throw new AddressNotFoundException(ANF_002.getCode(), ANF_002.getDefaultMessage());
         }
         return state;
     }
@@ -103,6 +101,5 @@ public class AddressService {
         Pattern p = Pattern.compile("\\d{6}\\b");
         Matcher m = p.matcher(pincode);
         return (m.find() && m.group().equals(pincode));
-
     }
 }
