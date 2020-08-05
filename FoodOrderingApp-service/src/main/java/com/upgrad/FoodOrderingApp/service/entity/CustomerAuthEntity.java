@@ -20,7 +20,7 @@ public class CustomerAuthEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "customerAuthIdGenerator")
-    @SequenceGenerator(name = "customerAuthIdGenerator",sequenceName = "customer_auth_id_seq",initialValue = 1,allocationSize = 1)
+    @SequenceGenerator(name = "customerAuthIdGenerator",sequenceName = "customer_auth_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
