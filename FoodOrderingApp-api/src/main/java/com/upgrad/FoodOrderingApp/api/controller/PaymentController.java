@@ -23,7 +23,7 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-    @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaymentListResponse> getPaymentModes(){
         List<PaymentEntity> paymentEntities = paymentService.getAllPaymentMethods();
         PaymentListResponse response = new PaymentListResponse();
