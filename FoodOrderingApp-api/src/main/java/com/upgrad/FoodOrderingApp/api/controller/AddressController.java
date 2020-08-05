@@ -5,7 +5,6 @@ import com.upgrad.FoodOrderingApp.service.business.AddressService;
 import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
@@ -18,10 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.GEN_001;
 
@@ -108,6 +104,27 @@ public class AddressController {
         AddressListResponse addressListResponse = new AddressListResponse().addresses(addressesList);
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
 
+    }
+
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.GET, path = "/states", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StatesListResponse> getAllStates(){
+
+        List<StateEntity> states = addressService.getAllStates();
+
+        if (!states.isEmpty()) {
+            List<StatesList> statesList = new LinkedList<>();
+            states.forEach(state -> {
+                StatesList stateList = new StatesList();
+                stateList.setId(UUID.fromString(state.getUuid()));
+                stateList.setStateName(state.getStateName());
+
+                statesList.add(stateList);
+            });
+            StatesListResponse statesListResponse = new StatesListResponse().states(statesList);
+            return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
+        } else
+            return new ResponseEntity<StatesListResponse>(new StatesListResponse(),HttpStatus.OK);
     }
 
 }

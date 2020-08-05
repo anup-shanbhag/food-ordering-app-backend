@@ -49,6 +49,13 @@ public class AddressService {
         return addresses;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<StateEntity> getAllStates() {
+
+        List<StateEntity> states = stateDao.getAllStates();
+
+        return states;
+    }
 
     public StateEntity getStateByUUID(final String stateUUID) throws AddressNotFoundException {
         StateEntity state = stateDao.findStateByUUID(stateUUID);
