@@ -15,4 +15,9 @@ public class RestaurantDao {
     public List<RestaurantEntity> restaurantsByRating(){
         return entityManager.createNamedQuery("Restaurants.fetchAll").getResultList();
     }
+
+    public List<RestaurantEntity> restaurantsByName(String name){
+        System.out.println("Name: " + name );
+        return entityManager.createNamedQuery("Restaurants.getByName").setParameter("name","%"+name.toLowerCase()+"%").getResultList();
+    }
 }
