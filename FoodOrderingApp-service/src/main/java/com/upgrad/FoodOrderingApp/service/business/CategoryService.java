@@ -1,7 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.business;
 
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
+import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ public class CategoryService {
 
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private RestaurantDao restaurantDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getAllCategoriesOrderedByName() {
@@ -37,6 +43,11 @@ public class CategoryService {
         }
 
         return categoryEntity;
+    }
+
+    public List<CategoryEntity> getCategoriesByRestaurant(String restaurantUuid){
+        RestaurantEntity restaurantEntity = restaurantDao.getRestaurantByID(restaurantUuid);
+        return categoryDao.getCategoriesByRestaurant(restaurantEntity);
     }
 
 }

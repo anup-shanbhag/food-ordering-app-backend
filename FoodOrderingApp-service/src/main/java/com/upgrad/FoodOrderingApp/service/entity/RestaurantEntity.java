@@ -16,7 +16,9 @@ import java.util.Set;
 @Table(name = "restaurant")
 @NamedQueries({
     @NamedQuery(name = "Restaurants.fetchAll", query = "SELECT r FROM RestaurantEntity r ORDER BY r.customerRating DESC"),
-    @NamedQuery(name = "Restaurants.getByName", query = "SELECT r FROM RestaurantEntity r WHERE LOWER(r.restaurantName) LIKE :name") })
+    @NamedQuery(name = "Restaurants.getByName", query = "SELECT r FROM RestaurantEntity r WHERE LOWER(r.restaurantName) LIKE :name"),
+    @NamedQuery(name = "Restaurants.getById", query = "SELECT r FROM RestaurantEntity r WHERE r.uuid=:id")
+})
 public class RestaurantEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -42,7 +44,7 @@ public class RestaurantEntity implements Serializable {
 
     @Column(name = "customer_rating")
     @NotNull
-    private BigDecimal customerRating;
+    private double customerRating;
 
     @Column(name = "average_price_for_two")
     @NotNull
@@ -61,11 +63,12 @@ public class RestaurantEntity implements Serializable {
     @EqualsExclude
     private AddressEntity address;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "restaurant_category",
-            joinColumns = {@JoinColumn(name = "restaurant_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")})
-    private Set<CategoryEntity> categories = new HashSet<CategoryEntity>();
+    @OneToMany(mappedBy = "restaurantEntity", fetch = FetchType.EAGER)
+    @NotNull
+    @ToStringExclude
+    @HashCodeExclude
+    @EqualsExclude
+    Set<RestaurantCategoryEntity> restaurantCategoryEntitySet = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_item",
@@ -105,11 +108,11 @@ public class RestaurantEntity implements Serializable {
         this.photoUrl = photoUrl;
     }
 
-    public BigDecimal getCustomerRating() {
+    public double getCustomerRating() {
         return customerRating;
     }
 
-    public void setCustomerRating(BigDecimal customerRating) {
+    public void setCustomerRating(double customerRating) {
         this.customerRating = customerRating;
     }
 
@@ -137,12 +140,12 @@ public class RestaurantEntity implements Serializable {
         this.address = address;
     }
 
-    public Set<CategoryEntity> getCategories() {
-        return categories;
+    public Set<RestaurantCategoryEntity> getRestaurantCategoryEntitySet() {
+        return restaurantCategoryEntitySet;
     }
 
-    public void setCategories(Set<CategoryEntity> categories) {
-        this.categories = categories;
+    public void setRestaurantCategoryEntitySet(Set<RestaurantCategoryEntity> restaurantCategoryEntitySet) {
+        this.restaurantCategoryEntitySet = restaurantCategoryEntitySet;
     }
 
     public Set<ItemEntity> getItem() {

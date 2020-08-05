@@ -61,6 +61,20 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @OneToMany(mappedBy = "address", fetch= FetchType.LAZY)
     private List<OrderEntity> orders = new ArrayList<>();
 
+
+
+    public AddressEntity(String uuid,  String flatBuilNo, String locality,  String city,  String pincode, StateEntity state) {
+        this.uuid = uuid;
+        this.flatBuilNo = flatBuilNo;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+    }
+    public AddressEntity(){
+
+    }
+
     public Integer getId() {
         return id;
     }

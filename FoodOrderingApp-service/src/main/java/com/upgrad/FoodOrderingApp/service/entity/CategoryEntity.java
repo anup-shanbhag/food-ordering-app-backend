@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -14,7 +16,7 @@ import java.util.List;
         @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c"),
         @NamedQuery(name = "Category.fetchCategoryItem", query = "SELECT ci FROM CategoryEntity ci WHERE ci.uuid=:categoryId")
 })
-public class CategoryEntity implements Serializable {
+public class CategoryEntity implements Serializable, Comparable<CategoryEntity> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categoryIdGenerator")
@@ -35,6 +37,13 @@ public class CategoryEntity implements Serializable {
     @ManyToMany(mappedBy = "categories",
             fetch = FetchType.EAGER)
     private List<ItemEntity> items;
+
+    @OneToMany(mappedBy = "categoryEntity", fetch = FetchType.EAGER)
+    @NotNull
+    @ToStringExclude
+    @HashCodeExclude
+    @EqualsExclude
+    Set<RestaurantCategoryEntity> restaurantCategoryEntitySet = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -69,11 +78,6 @@ public class CategoryEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
-    }
-
-    @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
     }
@@ -83,4 +87,8 @@ public class CategoryEntity implements Serializable {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
+    @Override
+    public int compareTo(CategoryEntity c) {
+        return this.getCategoryName().compareTo(c.getCategoryName());
+    }
 }
