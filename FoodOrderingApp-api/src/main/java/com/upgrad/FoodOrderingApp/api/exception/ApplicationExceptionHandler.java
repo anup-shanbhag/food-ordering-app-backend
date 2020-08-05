@@ -35,6 +35,12 @@ public class ApplicationExceptionHandler {
                 new ErrorResponse().code(uce.getCode()).message(uce.getErrorMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCouponNotFoundException(CouponNotFoundException cnfe, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new ErrorResponse().code(cnfe.getCode()).message(cnfe.getErrorMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UnexpectedException.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(UnexpectedException ue, WebRequest webRequest) {
         return new ResponseEntity<>(
@@ -64,7 +70,7 @@ public class ApplicationExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CategoryNotFoundException.class)
+    /*@ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> categoryNotFoundException(CategoryNotFoundException exc, WebRequest
             request){
         return new ResponseEntity<ErrorResponse>(
@@ -86,7 +92,7 @@ public class ApplicationExceptionHandler {
                 .code(exc.getCode())
                 .message(exc.getErrorMessage()),
                 HttpStatus.NOT_FOUND);
-    }
+    }*/
 
     @ExceptionHandler(RestaurantNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException rnfe, WebRequest webRequest) {
