@@ -11,6 +11,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "address")
 public class AddressEntity implements Serializable, Comparable<AddressEntity> {
+
+
+
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressIdGenerator")
@@ -52,6 +56,20 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
             joinColumns = {@JoinColumn(name = "address_id")},
             inverseJoinColumns = {@JoinColumn(name = "customer_id")})
     private CustomerEntity customer;
+
+
+
+    public AddressEntity(String uuid,  String flatBuilNo, String locality,  String city,  String pincode, StateEntity state) {
+        this.uuid = uuid;
+        this.flatBuilNo = flatBuilNo;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+    }
+    public AddressEntity(){
+
+    }
 
     public Integer getId() {
         return id;
