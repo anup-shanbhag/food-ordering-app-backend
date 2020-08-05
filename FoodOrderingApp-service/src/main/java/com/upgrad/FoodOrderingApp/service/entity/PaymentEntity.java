@@ -9,11 +9,14 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "payment")
+@NamedQueries({
+        @NamedQuery(name = "PaymentModes.All", query = "SELECT P FROM PaymentEntity P")
+})
 public class PaymentEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "paymentIdGenerator")
-    @SequenceGenerator(name = "paymentIdGenerator", sequenceName = "payment_id_seq")
+    @GeneratedValue(generator = "paymentIdGenerator")
+    @SequenceGenerator(name = "paymentIdGenerator", sequenceName = "payment_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -21,7 +24,7 @@ public class PaymentEntity implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private Integer uuid;
+    private String uuid;
 
     @Column(name = "payment_name")
     @Size(max = 255)
@@ -35,11 +38,11 @@ public class PaymentEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(Integer uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

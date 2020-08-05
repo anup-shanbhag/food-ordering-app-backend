@@ -9,11 +9,14 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "coupon")
+@NamedQueries({
+        @NamedQuery(name = "Coupon.ByName", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :couponName")
+})
 public class CouponEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "couponIdGenerator")
-    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq")
+    @GeneratedValue(generator = "couponIdGenerator")
+    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq",initialValue = 1,allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -21,7 +24,7 @@ public class CouponEntity implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private Integer uuid;
+    private String uuid;
 
     @Column(name = "coupon_name")
     @Size(max = 255)
@@ -29,7 +32,17 @@ public class CouponEntity implements Serializable {
 
     @Column(name = "percent")
     @NotNull
-    private Double percent;
+    private Integer percent;
+
+    public CouponEntity(){
+
+    }
+
+    public CouponEntity(final String uuid, final String couponName, Integer percent){
+        this.uuid=uuid;
+        this.couponName=couponName;
+        this.percent=percent;
+    }
 
     public Integer getId() {
         return id;
@@ -39,11 +52,11 @@ public class CouponEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(Integer uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
@@ -55,11 +68,11 @@ public class CouponEntity implements Serializable {
         this.couponName = couponName;
     }
 
-    public Double getPercent() {
+    public Integer getPercent() {
         return percent;
     }
 
-    public void setPercent(Double percent) {
+    public void setPercent(Integer percent) {
         this.percent = percent;
     }
 
