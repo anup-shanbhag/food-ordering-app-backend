@@ -3,6 +3,7 @@ package com.upgrad.FoodOrderingApp.api.controller;
 import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.common.AppConstants;
+import com.upgrad.FoodOrderingApp.service.common.AppUtils;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
@@ -53,11 +54,11 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> loginCustomer(@RequestHeader("authorization") final String headerParam) throws UnexpectedException, AuthenticationFailedException {
-        final String authToken = StringUtils.substringAfter(headerParam,"Basic ");
-        if(authToken == null || authToken.isEmpty()){
+        final String authToken = AppUtils.getBasicAuthToken(headerParam);
+        StringTokenizer tokens =  new StringTokenizer(new String (Base64.getDecoder().decode(authToken)), AppConstants.COLON);
+        if(tokens.countTokens() != AppConstants.TWO_2){
             throw new AuthenticationFailedException(ATH_003.getCode(),ATH_003.getDefaultMessage());
         }
-        StringTokenizer tokens =  new StringTokenizer(new String (Base64.getDecoder().decode(authToken)), AppConstants.COLON);
         final CustomerAuthEntity customerAuthEntity = customerService.authenticate(tokens.nextToken(),tokens.nextToken());
         final LoginResponse response = new LoginResponse();
         response.id(customerAuthEntity.getCustomer().getUuid()).firstName(customerAuthEntity.getCustomer().getFirstName()).lastName(customerAuthEntity.getCustomer().getLastName()).contactNumber(customerAuthEntity.getCustomer().getContactNumber()).emailAddress(customerAuthEntity.getCustomer().getEmail()).message("LOGGED IN SUCCESSFULLY");
@@ -69,10 +70,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LogoutResponse> logoutCustomer(@RequestHeader("authorization") final String headerParam) throws UnexpectedException, AuthorizationFailedException {
-        final String accessToken = StringUtils.substringAfter(headerParam,"Bearer ");
-        if(accessToken == null || accessToken.isEmpty()){
-            throw new UnexpectedException(GEN_001);
-        }
+        final String accessToken = AppUtils.getBearerAuthToken(headerParam);
         final CustomerAuthEntity customerAuthEntity = customerService.logout(accessToken);
         final LogoutResponse response = new LogoutResponse();
         response.id(customerAuthEntity.getCustomer().getUuid()).message("LOGGED OUT SUCCESSFULLY");
@@ -81,10 +79,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdateCustomerResponse> updateCustomer(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdateCustomerRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
-        final String accessToken = StringUtils.substringAfter(headerParam,"Bearer ");
-        if(accessToken == null || accessToken.isEmpty()){
-            throw new UnexpectedException(GEN_001);
-        }
+        final String accessToken = AppUtils.getBearerAuthToken(headerParam);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         customerEntity.setFirstName(request.getFirstName());
         customerEntity.setLastName(request.getLastName());
@@ -96,10 +91,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdatePasswordRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
-        final String accessToken = StringUtils.substringAfter(headerParam,"Bearer ");
-        if(accessToken == null || accessToken.isEmpty()){
-            throw new UnexpectedException(GEN_001);
-        }
+        final String accessToken = AppUtils.getBearerAuthToken(headerParam);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         final CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(request.getOldPassword(),request.getNewPassword(),customerEntity);
         final UpdatePasswordResponse response = new UpdatePasswordResponse();
