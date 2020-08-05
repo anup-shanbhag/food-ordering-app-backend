@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class CouponEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "couponIdGenerator")
-    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq")
+    @GeneratedValue(generator = "couponIdGenerator")
+    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq",initialValue = 1,allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -33,6 +33,16 @@ public class CouponEntity implements Serializable {
     @Column(name = "percent")
     @NotNull
     private Integer percent;
+
+    public CouponEntity(){
+
+    }
+
+    public CouponEntity(final String uuid, final String couponName, Integer percent){
+        this.uuid=uuid;
+        this.couponName=couponName;
+        this.percent=percent;
+    }
 
     public Integer getId() {
         return id;

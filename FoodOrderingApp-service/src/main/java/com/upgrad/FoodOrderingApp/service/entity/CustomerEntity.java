@@ -17,7 +17,7 @@ public class CustomerEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "customerIdGenerator")
-    @SequenceGenerator(name = "customerIdGenerator",sequenceName = "customer_id_seq",initialValue = 1,allocationSize = 1)
+    @SequenceGenerator(name = "customerIdGenerator",sequenceName = "customer_id_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id")
     @ToStringExclude
     @HashCodeExclude
