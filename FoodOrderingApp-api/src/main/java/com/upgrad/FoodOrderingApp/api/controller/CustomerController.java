@@ -7,25 +7,20 @@ import com.upgrad.FoodOrderingApp.service.common.AppUtils;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.SecureRandom;
 import java.util.*;
 
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.ATH_003;
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.GEN_001;
+import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
 //@CrossOrigin
 @RestController
@@ -38,6 +33,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST, path = "/signup",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignupCustomerResponse> registerCustomer(@RequestBody(required = false) final SignupCustomerRequest request) throws SignUpRestrictedException, UnexpectedException {
+        validateSignupRequest(request);
         final CustomerEntity newCustomerEntity = new CustomerEntity();
         newCustomerEntity.setUuid(UUID.randomUUID().toString());
         newCustomerEntity.setFirstName(request.getFirstName());
@@ -54,11 +50,9 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> loginCustomer(@RequestHeader("authorization") final String headerParam) throws UnexpectedException, AuthenticationFailedException {
-        final String authToken = AppUtils.getBasicAuthToken(headerParam);
-        StringTokenizer tokens =  new StringTokenizer(new String (Base64.getDecoder().decode(authToken)), AppConstants.COLON);
-        if(tokens.countTokens() != AppConstants.TWO_2){
-            throw new AuthenticationFailedException(ATH_003.getCode(),ATH_003.getDefaultMessage());
-        }
+        final String authToken = new String(Base64.getDecoder().decode(AppUtils.getBasicAuthToken(headerParam)));
+        validateLoginRequest(authToken);
+        StringTokenizer tokens =  new StringTokenizer(authToken, AppConstants.COLON);
         final CustomerAuthEntity customerAuthEntity = customerService.authenticate(tokens.nextToken(),tokens.nextToken());
         final LoginResponse response = new LoginResponse();
         response.id(customerAuthEntity.getCustomer().getUuid()).firstName(customerAuthEntity.getCustomer().getFirstName()).lastName(customerAuthEntity.getCustomer().getLastName()).contactNumber(customerAuthEntity.getCustomer().getContactNumber()).emailAddress(customerAuthEntity.getCustomer().getEmail()).message("LOGGED IN SUCCESSFULLY");
@@ -79,6 +73,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdateCustomerResponse> updateCustomer(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdateCustomerRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
+        validateUpdateCustomerRequest(request);
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         customerEntity.setFirstName(request.getFirstName());
@@ -91,11 +86,39 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdatePasswordRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
+        validatePasswordChangeRequest(request);
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         final CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(request.getOldPassword(),request.getNewPassword(),customerEntity);
         final UpdatePasswordResponse response = new UpdatePasswordResponse();
         response.id(updatedCustomerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(response, HttpStatus.OK);
+    }
+
+    private void validateSignupRequest(SignupCustomerRequest request) throws SignUpRestrictedException {
+        if((request.getContactNumber() == null) || (request.getFirstName() == null) ||
+                (request.getPassword() == null) || (request.getEmailAddress() == null) ||
+                (request.getContactNumber().isEmpty()) || (request.getFirstName().isEmpty()) ||
+                (request.getEmailAddress().isEmpty()) || (request.getPassword().isEmpty())){
+            throw new SignUpRestrictedException(SGR_005.getCode(), SGR_005.getDefaultMessage());
+        }
+    }
+
+    private void validateLoginRequest(String authorizationToken) throws AuthenticationFailedException {
+        if(!authorizationToken.matches(AppConstants.REG_EXP_BASIC_AUTH)){
+            throw new AuthenticationFailedException(ATH_003.getCode(),ATH_003.getDefaultMessage());
+        }
+    }
+
+    private void validateUpdateCustomerRequest(UpdateCustomerRequest request) throws UpdateCustomerException {
+        if(request.getFirstName()==null || request.getFirstName().isEmpty()){
+            throw new UpdateCustomerException(UCR_002.getCode(),UCR_002.getDefaultMessage());
+        }
+    }
+
+    private void validatePasswordChangeRequest(UpdatePasswordRequest request) throws UpdateCustomerException {
+        if((request.getOldPassword() == null) || (request.getNewPassword() == null) || (request.getOldPassword().isEmpty()) || (request.getNewPassword().isEmpty())){
+            throw new UpdateCustomerException(UCR_003.getCode(), UCR_003.getDefaultMessage());
+        }
     }
 }
