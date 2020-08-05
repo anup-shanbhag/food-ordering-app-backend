@@ -1,11 +1,11 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
-import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
+import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.business.AddressService;
 import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
@@ -18,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.GEN_001;
@@ -68,6 +71,43 @@ public class AddressController {
                 .status("ADDRESS SUCCESSFULLY REGISTERED");
 
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);
+    }
+
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.GET,
+            path = "/address/customer",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AddressListResponse> getAllAddresses(@RequestHeader("authorization") final String authorization)
+            throws AuthorizationFailedException {
+
+        final String accessToken = StringUtils.substringAfter(authorization, "Bearer ");
+        if (accessToken == null || accessToken.isEmpty()) {
+            throw new UnexpectedException(GEN_001);
+        }
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        List<AddressEntity> sortedAddress = addressService.getAllAddress(customerEntity);
+
+        List<AddressList> addressesList = new ArrayList<>();
+
+        sortedAddress.forEach(address -> {
+            AddressListState addressListState = new AddressListState();
+            addressListState.setId(UUID.fromString(address.getState().getUuid()));
+            addressListState.setStateName(address.getState().getStateName());
+
+            AddressList addressList = new AddressList()
+                    .id(UUID.fromString(address.getUuid()))
+                    .flatBuildingName(address.getFlatBuilNo())
+                    .city(address.getCity())
+                    .locality(address.getLocality())
+                    .pincode(address.getPincode())
+                    .state(addressListState);
+            addressesList.add(addressList);
+        });
+
+        AddressListResponse addressListResponse = new AddressListResponse().addresses(addressesList);
+        return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
+
     }
 
 }

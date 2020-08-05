@@ -6,11 +6,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
+
 
 @Entity
 @Table(name = "address")
-public class AddressEntity implements Serializable {
+public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressIdGenerator")
@@ -123,6 +123,11 @@ public class AddressEntity implements Serializable {
 
     public void setCustomers(CustomerEntity customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public int compareTo(AddressEntity i) {
+        return this.getId().compareTo(i.getId());
     }
 
     @Override

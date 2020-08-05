@@ -6,8 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -63,7 +62,7 @@ public class CustomerEntity implements Serializable {
 
     @OneToMany(mappedBy = "customer",
                     fetch = FetchType.EAGER)
-    private Set<AddressEntity> addresses = new HashSet<AddressEntity>();
+    private List<AddressEntity> addresses;
 
     public Integer getId() {
         return id;
@@ -129,11 +128,11 @@ public class CustomerEntity implements Serializable {
         this.salt = salt;
     }
 
-    public Set<AddressEntity> getAddresses() {
+    public List<AddressEntity> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(Set<AddressEntity> addresses) {
+    public void setAddresses(List<AddressEntity> addresses) {
         this.addresses = addresses;
     }
 

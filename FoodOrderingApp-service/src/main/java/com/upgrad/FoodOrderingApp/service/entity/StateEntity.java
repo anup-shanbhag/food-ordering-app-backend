@@ -54,6 +54,14 @@ public class StateEntity implements Serializable {
         this.stateName = stateName;
     }
 
+    public StateEntity() {
+    }
+
+    public StateEntity(@NotNull @Size(max = 200) String uuid, @Size(max = 30) String stateName) {
+        this.uuid = uuid;
+        this.stateName = stateName;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);

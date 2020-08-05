@@ -6,13 +6,16 @@ import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +39,16 @@ public class AddressService {
 
         return addressDao.saveAddress(address);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AddressEntity> getAllAddress(CustomerEntity customerEntity) {
+
+        List<AddressEntity> addresses = customerEntity.getAddresses();
+        Collections.sort(addresses);
+
+        return addresses;
+    }
+
 
     public StateEntity getStateByUUID(final String stateUUID) throws AddressNotFoundException {
         StateEntity state = stateDao.findStateByUUID(stateUUID);
