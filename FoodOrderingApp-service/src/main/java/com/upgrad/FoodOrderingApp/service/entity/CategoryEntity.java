@@ -6,9 +6,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
+@NamedQueries({
+        @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c"),
+        @NamedQuery(name = "Category.fetchCategoryItem", query = "SELECT ci FROM CategoryEntity ci WHERE ci.uuid=:categoryId")
+})
 public class CategoryEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -26,6 +31,10 @@ public class CategoryEntity implements Serializable {
     @Column(name = "category_name")
     @Size(max = 30)
     private String categoryName;
+
+    @ManyToMany(mappedBy = "categories",
+            fetch = FetchType.EAGER)
+    private List<ItemEntity> items;
 
     public Integer getId() {
         return id;
@@ -49,6 +58,14 @@ public class CategoryEntity implements Serializable {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public List<ItemEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemEntity> items) {
+        this.items = items;
     }
 
     @Override

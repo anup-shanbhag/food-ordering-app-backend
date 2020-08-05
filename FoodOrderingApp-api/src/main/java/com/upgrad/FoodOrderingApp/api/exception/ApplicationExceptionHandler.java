@@ -40,6 +40,15 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorResponse().code(ue.getErrorCode().getCode()).message(ue.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);    }
 
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> categoryNotFoundException(CategoryNotFoundException exc, WebRequest
+            request){
+        return new ResponseEntity<ErrorResponse>(
+                new ErrorResponse().code(exc.getCode()).message(exc.getErrorMessage()), HttpStatus.NOT_FOUND
+        );
+    }
+
+
     @ExceptionHandler(SaveAddressException.class)
     public ResponseEntity<ErrorResponse> saveAddressException (SaveAddressException exc, WebRequest request){
         return new ResponseEntity<ErrorResponse>(new ErrorResponse()

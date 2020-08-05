@@ -34,23 +34,23 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity saveCustomer(final CustomerEntity customerEntity) throws SignUpRestrictedException{
+        System.out.println(customerEntity.toString());
+        if(!validateMandatoryFields(customerEntity)){
+            throw new SignUpRestrictedException(SGR_005.getCode(), SGR_005.getDefaultMessage());
+        }
+        if(!isValidEmail(customerEntity.getEmail())){
+            throw new SignUpRestrictedException(SGR_002.getCode(), SGR_002.getDefaultMessage());
+        }
+        if(!isValidContactNumber(customerEntity.getContactNumber())){
+            throw new SignUpRestrictedException(SGR_003.getCode(), SGR_003.getDefaultMessage());
+        }
+        if(!isStrongPassword(customerEntity.getPassword())){
+            throw new SignUpRestrictedException(SGR_004.getCode(), SGR_004.getDefaultMessage());
+        }
+        final String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
+        customerEntity.setSalt(encryptedText[0]);
+        customerEntity.setPassword(encryptedText[1]);
         try {
-            System.out.println(customerEntity.toString());
-            if(!validateMandatoryFields(customerEntity)){
-                throw new SignUpRestrictedException(SGR_005.getCode(), SGR_005.getDefaultMessage());
-            }
-            if(!isValidEmail(customerEntity.getEmail())){
-                throw new SignUpRestrictedException(SGR_002.getCode(), SGR_002.getDefaultMessage());
-            }
-            if(!isValidContactNumber(customerEntity.getContactNumber())){
-                throw new SignUpRestrictedException(SGR_003.getCode(), SGR_003.getDefaultMessage());
-            }
-            if(!isStrongPassword(customerEntity.getPassword())){
-                throw new SignUpRestrictedException(SGR_004.getCode(), SGR_004.getDefaultMessage());
-            }
-            final String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
-            customerEntity.setSalt(encryptedText[0]);
-            customerEntity.setPassword(encryptedText[1]);
             return customerDao.saveCustomer(customerEntity);
         }catch (DataIntegrityViolationException dataIntegrityViolationException) {
             if (dataIntegrityViolationException.getCause() instanceof ConstraintViolationException) {
@@ -176,7 +176,7 @@ public class CustomerService {
     // This method users regular expressions to guage the strength of a user's
     // password returns password score
     private boolean isStrongPassword(final String password) {
-        return password.matches(AppConstants.REG_EXP_PASSWD_UPPER_CASE_CHAR) && password.matches(AppConstants.REG_EXP_PASSWD_SPECIAL_CHAR) && password.matches(AppConstants.REG_EXP_PASSWD_DIGIT) && (password.length() > AppConstants.NUMBER_7);
+        return password.matches(AppConstants.REG_EXP_PASSWD_UPPER_CASE_CHAR) && password.matches(AppConstants.REG_EXP_PASSWD_SPECIAL_CHAR) && password.matches(AppConstants.REG_EXP_PASSWD_DIGIT) && (password.length() > AppConstants.SEVEN_7);
     }
 
     private boolean isValidContactNumber(final String contactNumber){
