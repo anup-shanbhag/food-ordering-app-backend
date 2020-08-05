@@ -61,10 +61,8 @@ public class CustomerEntity implements Serializable {
     @HashCodeExclude
     private String salt;
 
-    @ManyToMany
-    @JoinTable(name = "customer_address",
-            joinColumns = {@JoinColumn(name = "customer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "address_id")})
+    @OneToMany(mappedBy = "customer",
+                    fetch = FetchType.EAGER)
     private Set<AddressEntity> addresses = new HashSet<AddressEntity>();
 
     public Integer getId() {
