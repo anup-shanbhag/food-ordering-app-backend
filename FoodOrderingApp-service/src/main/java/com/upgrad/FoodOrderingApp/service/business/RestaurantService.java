@@ -5,10 +5,12 @@ import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,5 +47,17 @@ public class RestaurantService {
             throw new RestaurantNotFoundException(RNF_002.getCode(), RNF_002.getDefaultMessage());
         }
         return restaurantDao.getRestaurantByID(uuid);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurant, Double customerRating) throws InvalidRatingException {
+            if (customerRating < 1.0 || customerRating > 5.0) {
+                throw new InvalidRatingException(IRE_001.getCode(), IRE_001.getDefaultMessage());
+            }
+        Double newAverageRating = ((restaurant.getCustomerRating()) * ((double) restaurant.getNumberOfCustomersRated()) + customerRating) / ((double) restaurant.getNumberOfCustomersRated() + 1);
+        restaurant.setCustomerRating(newAverageRating);
+        restaurant.setNumberCustomersRated(restaurant.getNumberOfCustomersRated() + 1);
+        return restaurantDao.updateRestaurantRating(restaurant);
+
     }
 }
