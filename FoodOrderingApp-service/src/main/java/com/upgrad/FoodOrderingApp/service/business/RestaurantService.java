@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.CNF_001;
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.RNF_003;
+import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
 @Service
 public class RestaurantService {
@@ -23,7 +22,7 @@ public class RestaurantService {
     @Autowired
     private CategoryDao categoryDao;
 
-    public List<RestaurantEntity> restaurantsByRating(){
+    public List<RestaurantEntity> restaurantsByRating() {
         return restaurantDao.restaurantsByRating();
     }
 
@@ -34,11 +33,17 @@ public class RestaurantService {
     }
 
     public List<RestaurantEntity> restaurantByCategory(String categoryUuid) throws CategoryNotFoundException {
-        if(categoryUuid.trim().length() <= 0){
-            throw new CategoryNotFoundException(CNF_001.getCode(),CNF_001.getDefaultMessage());
+        if (categoryUuid.trim().length() <= 0) {
+            throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
         CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);
         return restaurantDao.restaurantByCategory(categoryEntity);
     }
 
+    public RestaurantEntity restaurantByUUID(String uuid) throws RestaurantNotFoundException {
+        if (uuid.trim().length() <= 0) {
+            throw new RestaurantNotFoundException(RNF_002.getCode(), RNF_002.getDefaultMessage());
+        }
+        return restaurantDao.getRestaurantByID(uuid);
+    }
 }

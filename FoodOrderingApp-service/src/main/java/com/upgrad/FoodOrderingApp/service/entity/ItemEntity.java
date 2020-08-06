@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,11 +43,11 @@ public class ItemEntity implements Serializable {
     @NotNull
     private ItemType type;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "category_item",
-            joinColumns = {@JoinColumn(name = "item_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")})
-    private Set<CategoryEntity> categories = new HashSet<CategoryEntity>();
+    @OneToMany(mappedBy = "itemEntity", cascade= CascadeType.ALL, fetch= FetchType.LAZY)
+    @ToStringExclude
+    @HashCodeExclude
+    @EqualsExclude
+    private List<CategoryItemEntity> categoryItemEntityList;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @NotNull
@@ -96,12 +97,12 @@ public class ItemEntity implements Serializable {
         this.type = type;
     }
 
-    public Set<CategoryEntity> getCategories() {
-        return categories;
+    public List<CategoryItemEntity> getCategoryItemEntityList() {
+        return categoryItemEntityList;
     }
 
-    public void setCategories(Set<CategoryEntity> categories) {
-        this.categories = categories;
+    public void setCategoryItemEntityList(List<CategoryItemEntity> categoryItemEntityList) {
+        this.categoryItemEntityList = categoryItemEntityList;
     }
 
     public Set<OrderItemEntity> getOrders() {

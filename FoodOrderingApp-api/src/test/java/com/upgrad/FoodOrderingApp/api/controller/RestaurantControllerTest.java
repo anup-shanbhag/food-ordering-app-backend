@@ -57,7 +57,7 @@ public class RestaurantControllerTest {
     // ------------------------------------------ GET /restaurant/{restaurant_id} ------------------------------------------
 
     //This test case passes when you get restaurant details based on restaurant id.
-/*    @Test
+    @Test
     public void shouldGetRestaurantDetailsForCorrectRestaurantId() throws Exception {
         final RestaurantEntity restaurantEntity = getRestaurantEntity();
         when(mockRestaurantService.restaurantByUUID("someRestaurantId"))
@@ -113,7 +113,7 @@ public class RestaurantControllerTest {
         verify(mockCategoryService, times(0)).getCategoriesByRestaurant(anyString());
         verify(mockItemService, times(0)).getItemsByCategoryAndRestaurant(anyString(), anyString());
     }
-*/
+
     // ------------------------------------------ GET /restaurant/name/{restaurant_name} ------------------------------------------
 
     //This test case passes when you are able to fetch restaurants by the name you provided.
@@ -458,7 +458,7 @@ public class RestaurantControllerTest {
         restaurantEntity.setUuid(restaurantId);
         restaurantEntity.setAddress(addressEntity);
         restaurantEntity.setAvgPrice(123);
-        restaurantEntity.setCustomerRating(3.4f);
+        restaurantEntity.setCustomerRating(3.4);
         restaurantEntity.setNumberCustomersRated(200);
         restaurantEntity.setPhotoUrl("someurl");
         restaurantEntity.setRestaurantName("Famous Restaurant");
