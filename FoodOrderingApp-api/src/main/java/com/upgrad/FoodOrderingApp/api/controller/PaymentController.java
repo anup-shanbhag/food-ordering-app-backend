@@ -28,7 +28,7 @@ public class PaymentController {
         List<PaymentEntity> paymentEntities = paymentService.getAllPaymentMethods();
         PaymentListResponse response = new PaymentListResponse();
         paymentEntities.forEach( paymentEntity -> response.addPaymentMethodsItem(new PaymentResponse().id(UUID.fromString(paymentEntity.getUuid())).paymentName(paymentEntity.getPaymentName())));
-        if(paymentEntities.isEmpty()){
+        if(response.getPaymentMethods().isEmpty()){
             return new ResponseEntity<PaymentListResponse>(response, HttpStatus.NO_CONTENT);
         }
         else{
