@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "orders")
 @NamedQueries({
-        @NamedQuery(name = "Orders.ByCustomer", query = "SELECT O FROM OrderEntity O WHERE O.customer.uuid = :customerId")
+        @NamedQuery(name = "Orders.ByCustomer", query = "SELECT O FROM OrderEntity O WHERE O.customer.uuid = :customerId ORDER BY O.date DESC")
 })
 public class OrderEntity implements Serializable {
     @Id
