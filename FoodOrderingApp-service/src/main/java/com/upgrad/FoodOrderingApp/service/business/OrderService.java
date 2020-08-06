@@ -1,12 +1,16 @@
 package com.upgrad.FoodOrderingApp.service.business;
 
 import com.upgrad.FoodOrderingApp.service.dao.CouponDao;
+import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
+import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.CPF_001;
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.CPF_002;
@@ -16,6 +20,9 @@ public class OrderService {
 
     @Autowired
     CouponDao couponDao;
+
+    @Autowired
+    OrderDao orderDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CouponEntity getCouponByCouponName(final String couponName) throws CouponNotFoundException {
@@ -29,5 +36,9 @@ public class OrderService {
         else{
             throw new CouponNotFoundException(CPF_001.getCode(),CPF_001.getDefaultMessage());
         }
+    }
+
+    public List<OrderEntity> getOrdersByCustomers(final String uuid) {
+        return orderDao.getOrdersByCustomers(uuid);
     }
 }
