@@ -120,7 +120,7 @@ public class RestaurantEntity implements Serializable {
         return averagePriceForTwo;
     }
 
-    public void setAveragePriceForTwo(Integer averagePriceForTwo) {
+    public void setAvgPrice(Integer averagePriceForTwo) {
         this.averagePriceForTwo = averagePriceForTwo;
     }
 
@@ -128,7 +128,7 @@ public class RestaurantEntity implements Serializable {
         return numberOfCustomersRated;
     }
 
-    public void setNumberOfCustomersRated(Integer numberOfCustomersRated) {
+    public void setNumberCustomersRated(Integer numberOfCustomersRated) {
         this.numberOfCustomersRated = numberOfCustomersRated;
     }
 

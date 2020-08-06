@@ -8,9 +8,7 @@ import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.business.ItemService;
 import com.upgrad.FoodOrderingApp.service.business.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.*;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -460,9 +457,9 @@ public class RestaurantControllerTest {
         final String restaurantId = UUID.randomUUID().toString();
         restaurantEntity.setUuid(restaurantId);
         restaurantEntity.setAddress(addressEntity);
-        restaurantEntity.setAveragePriceForTwo(123);
+        restaurantEntity.setAvgPrice(123);
         restaurantEntity.setCustomerRating(3.4f);
-        restaurantEntity.setNumberOfCustomersRated(200);
+        restaurantEntity.setNumberCustomersRated(200);
         restaurantEntity.setPhotoUrl("someurl");
         restaurantEntity.setRestaurantName("Famous Restaurant");
         return restaurantEntity;
