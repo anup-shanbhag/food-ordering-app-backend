@@ -34,16 +34,10 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
     @Size(max = 30)
     private String categoryName;
 
-    @ManyToMany(mappedBy = "categories",
-            fetch = FetchType.EAGER)
+    @ManyToMany
+    @JoinTable(name = "category_item", joinColumns = @JoinColumn(name = "category_id"),
+        inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<ItemEntity> items;
-
-    @OneToMany(mappedBy = "categoryEntity", fetch = FetchType.EAGER)
-    @NotNull
-    @ToStringExclude
-    @HashCodeExclude
-    @EqualsExclude
-    Set<RestaurantCategoryEntity> restaurantCategoryEntitySet = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -78,6 +72,11 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+    }
+
+    @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
     }
@@ -88,7 +87,7 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
     }
 
     @Override
-    public int compareTo(CategoryEntity c) {
-        return this.getCategoryName().compareTo(c.getCategoryName());
+    public int compareTo(CategoryEntity categoryEntity) {
+        return 0;
     }
 }

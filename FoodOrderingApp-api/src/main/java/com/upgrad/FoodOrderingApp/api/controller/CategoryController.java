@@ -5,7 +5,9 @@ import com.upgrad.FoodOrderingApp.api.model.CategoryDetailsResponse;
 import com.upgrad.FoodOrderingApp.api.model.CategoryListResponse;
 import com.upgrad.FoodOrderingApp.api.model.ItemList;
 import com.upgrad.FoodOrderingApp.service.business.CategoryService;
+import com.upgrad.FoodOrderingApp.service.business.ItemService;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/category", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,6 +62,8 @@ public class CategoryController {
                                 .itemType(ItemList.ItemTypeEnum.fromValue(items.getType().getValue()))
                                 .price(items.getPrice())
                 ));
+
+
 
         CategoryDetailsResponse categoryDetailsResponse = new CategoryDetailsResponse()
                 .categoryName(categoryEntity.getCategoryName())

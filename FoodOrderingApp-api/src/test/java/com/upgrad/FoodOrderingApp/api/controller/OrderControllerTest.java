@@ -594,7 +594,7 @@ public class OrderControllerTest {
         restaurantEntity.setUuid(restaurantId);
         restaurantEntity.setAddress(addressEntity);
         restaurantEntity.setAvgPrice(123);
-        restaurantEntity.setCustomerRating(3.4);
+        restaurantEntity.setCustomerRating(3.4f);
         restaurantEntity.setNumberCustomersRated(200);
         restaurantEntity.setPhotoUrl("someurl");
         restaurantEntity.setRestaurantName("Famous Restaurant");
