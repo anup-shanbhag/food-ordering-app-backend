@@ -74,4 +74,9 @@ public class ApplicationExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException rnfe, WebRequest webRequest) {
         return new ResponseEntity<>(
             new ErrorResponse().code(rnfe.getCode()).message(rnfe.getErrorMessage()), HttpStatus.NOT_FOUND);    }
+
+    @ExceptionHandler(InvalidRatingException.class)
+    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(InvalidRatingException ire, WebRequest webRequest) {
+        return new ResponseEntity<>(
+            new ErrorResponse().code(ire.getCode()).message(ire.getErrorMessage()), HttpStatus.BAD_REQUEST);    }
 }

@@ -2,21 +2,23 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.business.CategoryService;
+import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.business.ItemService;
 import com.upgrad.FoodOrderingApp.service.business.RestaurantService;
+import com.upgrad.FoodOrderingApp.service.common.AppUtils;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -36,6 +38,9 @@ public class RestaurantController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private CustomerService customerService;
 
     // TODO :
     //  - Get All Restaurants - "/restaurant"
@@ -217,5 +222,21 @@ public class RestaurantController {
 
         return new ResponseEntity<RestaurantDetailsResponse>(restaurant, HttpStatus.OK);
     }
+
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/{restaurant_id}",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantUpdatedResponse> updateRestaurantDetails(
+        @RequestParam(name = "customer_rating") final Double customerRating,
+        @PathVariable("restaurant_id") final String restaurantId,
+        @RequestHeader("authorization") final String authorization)
+        throws RestaurantNotFoundException, AuthorizationFailedException, InvalidRatingException {
+        final String accessToken = AppUtils.getBearerAuthToken(authorization);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        RestaurantEntity restaurant = restaurantService.restaurantByUUID(restaurantId);
+        RestaurantEntity updatedRestaurant = restaurantService.updateRestaurantRating(restaurant,customerRating);
+        RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse().id(UUID.fromString(restaurantId)).status("RESTAURANT RATING UPDATED SUCCESSFULLY");
+        return new ResponseEntity<>(restaurantUpdatedResponse, HttpStatus.OK);
+    }
 }
+
 
