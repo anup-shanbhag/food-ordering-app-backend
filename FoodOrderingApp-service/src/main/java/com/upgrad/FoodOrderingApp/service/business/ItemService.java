@@ -22,6 +22,7 @@ public class ItemService {
     @Autowired
     private CategoryDao categoryDao;
 
+
   public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
       RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
       CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
@@ -31,5 +32,9 @@ public class ItemService {
     public List<ItemEntity> getItemsByCategory(String categoryUuid){
         CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
         return itemDao.getItemsByCategory(category);
+    }
+
+    public ItemEntity getItemById(String uuid){
+        return itemDao.getItemById(uuid);
     }
 }
