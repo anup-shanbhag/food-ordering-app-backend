@@ -4,6 +4,7 @@ import com.upgrad.FoodOrderingApp.service.dao.CouponDao;
 import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
+import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,28 @@ public class OrderService {
         }
     }
 
+    public CouponEntity getCouponByCouponId(String uuid) throws CouponNotFoundException {
+        if((uuid == null) || (uuid.isEmpty())){
+            throw new CouponNotFoundException("CPF-002","No coupon by this id");
+        }
+        CouponEntity couponEntity =  couponDao.getCouponByCouponId(uuid);
+        if(couponEntity != null){
+            return couponEntity;
+        }else
+            throw new  CouponNotFoundException("CPF-002","No coupon by this id");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public OrderEntity saveOrder(OrderEntity orderEntity){
+       return orderDao.saveOrder(orderEntity);
+    }
+
     public List<OrderEntity> getOrdersByCustomers(final String uuid) {
         return orderDao.getOrdersByCustomers(uuid);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public OrderItemEntity saveOrderItem(OrderItemEntity orderedItem) {
+        return orderDao.saveOrderItem(orderedItem);
     }
 }

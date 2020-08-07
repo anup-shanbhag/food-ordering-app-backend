@@ -15,6 +15,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
+@NamedQueries({
+    @NamedQuery(name="ItemEntity.getItemById",query = "SELECT i FROM ItemEntity i WHERE i.uuid=:uuid")
+
+})
 public class ItemEntity implements Serializable {
     @Id
     @Column(name = "id")

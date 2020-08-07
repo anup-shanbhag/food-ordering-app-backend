@@ -79,4 +79,10 @@ public class ApplicationExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(InvalidRatingException ire, WebRequest webRequest) {
         return new ResponseEntity<>(
             new ErrorResponse().code(ire.getCode()).message(ire.getErrorMessage()), HttpStatus.BAD_REQUEST);    }
+
+
+    @ExceptionHandler(PaymentMethodNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentMethodNotFoundException(PaymentMethodNotFoundException pmnf, WebRequest webRequest) {
+        return new ResponseEntity<>(
+            new ErrorResponse().code(pmnf.getCode()).message(pmnf.getErrorMessage()), HttpStatus.NOT_FOUND);    }
 }

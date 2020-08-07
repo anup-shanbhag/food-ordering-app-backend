@@ -26,4 +26,12 @@ public class ItemDao{
             .setParameter("category",category)
             .getResultList();
     }
+
+
+    public ItemEntity getItemById(String uuid){
+        return entityManager.createNamedQuery("ItemEntity.getItemById",ItemEntity.class)
+            .setParameter("uuid",uuid)
+            .getSingleResult();
+    }
 }
+

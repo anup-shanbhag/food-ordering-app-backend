@@ -10,7 +10,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "coupon")
 @NamedQueries({
-        @NamedQuery(name = "Coupon.ByName", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :couponName")
+        @NamedQuery(name = "Coupon.ByName", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :couponName"),
+        @NamedQuery(name = "Coupon.ByUuid", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :uuid")
 })
 public class CouponEntity implements Serializable {
     @Id
