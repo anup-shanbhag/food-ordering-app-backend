@@ -2,8 +2,10 @@ package com.upgrad.FoodOrderingApp.service.business;
 
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
+import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +26,6 @@ public class ItemService {
     @Autowired
     private OrderDao orderDao;
 
-  public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
-      RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
-      CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-        return itemDao.getItemsByCategoryAndRestaurant(restaurant,category);
-  }
-
     public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid) {
         RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
         CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
@@ -41,6 +37,9 @@ public class ItemService {
         return itemDao.getItemsByCategory(category);
     }
 
+    public ItemEntity getItemById(String uuid) {
+        return itemDao.getItemById(uuid);
+    }
 
     public List<ItemEntity> getItemsByPopularity(RestaurantEntity restaurantEntity) throws RestaurantNotFoundException {
 
@@ -60,8 +59,8 @@ public class ItemService {
         }
 
         /* Convert unsorted HashMap to list for sorting */
-        List<Map.Entry<String, Integer> > unsortedItemCountList =
-                new LinkedList<Map.Entry<String, Integer> >(unsortedItemCountMap.entrySet());
+        List<Map.Entry<String, Integer>> unsortedItemCountList =
+                new LinkedList<Map.Entry<String, Integer>>(unsortedItemCountMap.entrySet());
 
         /* Sort the list */
         unsortedItemCountList.sort(new Comparator<Map.Entry<String, Integer>>() {
@@ -77,9 +76,5 @@ public class ItemService {
         );
 
         return sortedItemEntityList;
-    }
-
-    public ItemEntity getItemById(String uuid){
-        return itemDao.getItemById(uuid);
     }
 }
