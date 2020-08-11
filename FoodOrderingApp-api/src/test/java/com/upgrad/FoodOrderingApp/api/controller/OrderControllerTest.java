@@ -2,6 +2,8 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.upgrad.FoodOrderingApp.api.model.CustomerOrderResponse;
+import com.upgrad.FoodOrderingApp.api.model.ItemQuantity;
+import com.upgrad.FoodOrderingApp.api.model.SaveOrderRequest;
 import com.upgrad.FoodOrderingApp.service.business.*;
 import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.*;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
@@ -52,7 +55,7 @@ public class OrderControllerTest {
 
     @MockBean
     private ItemService mockItemService;
-/*
+
     // ------------------------------------------ POST /order ------------------------------------------
 
     //This test case passes when you are able to save order successfully.
@@ -345,7 +348,7 @@ public class OrderControllerTest {
                 .getCouponByCouponId(saveOrderRequest.getCouponId().toString());
         verify(mockOrderService, times(0)).saveOrder(any());
         verify(mockOrderService, times(0)).saveOrderItem(any());
-    }*/
+    }
 
     // ------------------------------------------ GET /order ------------------------------------------
 
@@ -545,7 +548,7 @@ public class OrderControllerTest {
     }
 
     // ------------------------------------------ POJO Builder ------------------------------------------
-/*
+
     private SaveOrderRequest getSaveOrderRequest() {
         final SaveOrderRequest request = new SaveOrderRequest();
 
@@ -574,7 +577,7 @@ public class OrderControllerTest {
 
         return request;
     }
-*/
+
     private OrderEntity getOrderEntity(final CustomerEntity customerEntity) {
         final String stateId = UUID.randomUUID().toString();
         final StateEntity stateEntity = new StateEntity(stateId, "someState");
@@ -594,7 +597,7 @@ public class OrderControllerTest {
         restaurantEntity.setUuid(restaurantId);
         restaurantEntity.setAddress(addressEntity);
         restaurantEntity.setAvgPrice(123);
-        restaurantEntity.setCustomerRating(3.4f);
+        restaurantEntity.setCustomerRating(3.4);
         restaurantEntity.setNumberCustomersRated(200);
         restaurantEntity.setPhotoUrl("someurl");
         restaurantEntity.setRestaurantName("Famous Restaurant");

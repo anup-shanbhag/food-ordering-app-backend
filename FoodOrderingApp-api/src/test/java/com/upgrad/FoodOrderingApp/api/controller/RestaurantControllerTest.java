@@ -8,7 +8,9 @@ import com.upgrad.FoodOrderingApp.service.business.CustomerService;
 import com.upgrad.FoodOrderingApp.service.business.ItemService;
 import com.upgrad.FoodOrderingApp.service.business.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -247,7 +249,7 @@ public class RestaurantControllerTest {
         verify(mockCategoryService, times(1)).getCategoriesByRestaurant(restaurantEntity.getUuid());
     }
 
-/*
+
     // ------------------------------------------ PUT /restaurant/{restaurant_id} ------------------------------------------
 
     //This test case passes when you are able to update restaurant rating successfully.
@@ -255,25 +257,21 @@ public class RestaurantControllerTest {
     public void shouldUpdateRestaurantRating() throws Exception {
         final String restaurantId = UUID.randomUUID().toString();
 
-        when(mockCustomerService.getCustomer("database_accesstoken2"))
-                .thenReturn(new CustomerEntity());
+        when(mockCustomerService.getCustomer("database_accesstoken2")).thenReturn(new CustomerEntity());
 
         final RestaurantEntity restaurantEntity = getRestaurantEntity();
         when(mockRestaurantService.restaurantByUUID(restaurantId)).thenReturn(restaurantEntity);
-
-        when(mockRestaurantService.updateRestaurantRating(restaurantEntity, 4.5))
-                .thenReturn(new RestaurantEntity());
-
-        mockMvc
-                .perform(put("/restaurant/" + restaurantId + "?customer_rating=4.5")
+        // RestaurantEntity updatedRestaurantEntity = new RestaurantEntity();
+        //updatedRestaurantEntity.setUuid(restaurantId);
+        when(mockRestaurantService.updateRestaurantRating(restaurantEntity, 4.5)).thenReturn(new RestaurantEntity());
+        mockMvc.perform(put("/restaurant/" + restaurantId + "?customer_rating=4.5")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .header("authorization", "Bearer database_accesstoken2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(restaurantId));
         verify(mockCustomerService, times(1)).getCustomer("database_accesstoken2");
         verify(mockRestaurantService, times(1)).restaurantByUUID(restaurantId);
-        verify(mockRestaurantService, times(1))
-                .updateRestaurantRating(restaurantEntity, 4.5);
+        verify(mockRestaurantService, times(1)).updateRestaurantRating(restaurantEntity, 4.5);
     }
 
     //This test case passes when you have handled the exception of trying to update restaurant rating while you are
@@ -426,7 +424,7 @@ public class RestaurantControllerTest {
         verify(mockRestaurantService, times(1))
                 .updateRestaurantRating(restaurantEntity, 5.5);
     }
-*/
+
     // ------------------------------------------ POJO builders ------------------------------------------
 
     private ItemEntity getItemEntity() {

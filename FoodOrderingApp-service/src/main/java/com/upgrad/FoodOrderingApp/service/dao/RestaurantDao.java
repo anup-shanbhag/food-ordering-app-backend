@@ -37,4 +37,13 @@ public class RestaurantDao {
             return null;
         }
     }
+
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurant){
+        try {
+             entityManager.merge(restaurant);
+             return  restaurant;
+        }catch (NoResultException nre){
+            return null;
+        }
+    }
 }

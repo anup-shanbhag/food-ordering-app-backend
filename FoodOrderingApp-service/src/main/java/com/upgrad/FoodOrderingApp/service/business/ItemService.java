@@ -2,10 +2,8 @@ package com.upgrad.FoodOrderingApp.service.business;
 
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
-import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.*;
-import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,12 @@ public class ItemService {
 
     @Autowired
     private OrderDao orderDao;
+
+  public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
+      RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
+      CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
+        return itemDao.getItemsByCategoryAndRestaurant(restaurant,category);
+  }
 
     public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid) {
         RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
@@ -73,5 +77,9 @@ public class ItemService {
         );
 
         return sortedItemEntityList;
+    }
+
+    public ItemEntity getItemById(String uuid){
+        return itemDao.getItemById(uuid);
     }
 }
