@@ -17,6 +17,10 @@ public class PaymentService {
     @Autowired
     PaymentDao paymentDao;
 
+    /**
+     * Method returns all available payment methods in the system
+     * @return List of all available payment methods
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public List<PaymentEntity> getAllPaymentMethods() {
         return paymentDao.getAllPaymentMethods();

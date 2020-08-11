@@ -16,6 +16,11 @@ public class CustomerDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Method takes a CustomerEntity and stores it in the database
+     * @param customerEntity CustomerEntity to persist
+     * @return persisted CustomerEntity
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public CustomerEntity saveCustomer(final CustomerEntity customerEntity) {
         entityManager.persist(customerEntity);
@@ -23,11 +28,21 @@ public class CustomerDao {
         return customerEntity;
     }
 
+    /**
+     * Method takes a CustomerAuthEntity and stores it in the database
+     * @param customerAuthEntity CustomerAuthEntity to persist
+     * @return persisted CustomerAuthEntity
+     */
     public CustomerAuthEntity saveCustomerAuthentication(final CustomerAuthEntity customerAuthEntity) {
         entityManager.persist(customerAuthEntity);
         return customerAuthEntity;
     }
 
+    /**
+     * Method takes a contact number and returns the matching CustomerEntity
+     * @param contactNumber contact number
+     * @return CustomerEntity
+     */
     public CustomerEntity getCustomerByContactNumber(final String contactNumber){
         try {
             return entityManager.createNamedQuery("Customer.ByContact", CustomerEntity.class)
@@ -38,6 +53,11 @@ public class CustomerDao {
         }
     }
 
+    /**
+     * Method takes an access token as a parameter and returns the matching CustomerAuthEntity
+     * @param accessToken access token
+     * @return CustomerAuthEntity
+     */
     public CustomerAuthEntity getCustomerAuthenticationByAccessToken(String accessToken) {
         try {
             return entityManager.createNamedQuery("Customer.ByAuthToken", CustomerAuthEntity.class)
@@ -48,6 +68,11 @@ public class CustomerDao {
         }
     }
 
+    /**
+     * Method takes an updated CustomerEntity and merges the updates to the database
+     * @param customerEntity Updated CustomerEntity
+     * @return persisted CustomerEntity
+     */
     public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
         return entityManager.merge(customerEntity);
     }

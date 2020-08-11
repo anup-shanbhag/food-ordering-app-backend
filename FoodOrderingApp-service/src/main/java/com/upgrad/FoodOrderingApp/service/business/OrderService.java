@@ -25,16 +25,28 @@ public class OrderService {
     @Autowired
     OrderDao orderDao;
 
+    /**
+     * Method takes a coupon name and returns details of the matching coupon
+     * @param couponName
+     * @return CouponEntity with Coupon Details
+     * @throws CouponNotFoundException on no input (coupon name) and no such coupon is found
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public CouponEntity getCouponByCouponName(final String couponName) throws CouponNotFoundException {
+        // Check is input coupon name is valid
         if((couponName == null) || (couponName.isEmpty())){
+            // Throw error if coupon name is empty
             throw new CouponNotFoundException(CPF_002.getCode(),CPF_002.getDefaultMessage());
         }
+
+        // Fetch matching CouponEntity from the database
         final CouponEntity couponEntity = couponDao.getCouponByCouponName(couponName);
+
         if(couponEntity != null){
             return couponEntity;
         }
         else{
+            // Throw error if not such coupon is found
             throw new CouponNotFoundException(CPF_001.getCode(),CPF_001.getDefaultMessage());
         }
     }
@@ -55,8 +67,13 @@ public class OrderService {
        return orderDao.saveOrder(orderEntity);
     }
 
-    public List<OrderEntity> getOrdersByCustomers(final String uuid) {
-        return orderDao.getOrdersByCustomers(uuid);
+    /**
+     * Method takes a customer id in the input and returns all of the customer's orders
+     * @param customerId Customer Id
+     * @return List of all of the customer's order. Empty if customer has not placed any orders.
+     */
+    public List<OrderEntity> getOrdersByCustomers(final String customerId) {
+        return orderDao.getOrdersForCustomer(customerId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

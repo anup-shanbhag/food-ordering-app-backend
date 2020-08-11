@@ -5,7 +5,6 @@ import com.upgrad.FoodOrderingApp.service.business.*;
 import com.upgrad.FoodOrderingApp.service.common.AppUtils;
 import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.*;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,11 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.CPF_002;
 
 @RestController
 @RequestMapping("/order")
@@ -45,6 +41,14 @@ public class OrderController {
     @Autowired
     private ItemService itemService;
 
+    /**
+     * Method takes customer's access token and a coupon name  as inputs and the returns the coupon details
+     * @param headerParam Customer's access token as request paremeter
+     * @param couponName Coupon name
+     * @return ResponseEntity with details of the matching coupon
+     * @throws AuthorizationFailedException on incorrect/invalid access token
+     * @throws CouponNotFoundException on incorrect/invalid/non-existent coupon name
+     */
     @RequestMapping(path = "/coupon/{coupon_name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CouponDetailsResponse> getCoupon(@RequestHeader("authorization") final String headerParam, @PathVariable("coupon_name") final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
@@ -55,6 +59,12 @@ public class OrderController {
         return new ResponseEntity<CouponDetailsResponse>(response, HttpStatus.OK);
     }
 
+    /**
+     * Method takes customers access token and retrieves a list of all of the customer's orders
+     * @param headerParam Customer's access token as request header parameter
+     * @return ResponseEntity with list of all of the customer's orders
+     * @throws AuthorizationFailedException on invalid/incorrect access token
+     */
     @RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerOrderResponse> getOrders(@RequestHeader("authorization") final String headerParam) throws AuthorizationFailedException {
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
