@@ -14,6 +14,10 @@ public class PaymentDao {
     @PersistenceContext
     EntityManager entityManager;
 
+    /**
+     * Method returns all available Payment Entities in the system
+     * @return List of PaymentEntity
+     */
     public List<PaymentEntity> getAllPaymentMethods() {
         return entityManager.createNamedQuery("PaymentModes.All",PaymentEntity.class).getResultList();
     }

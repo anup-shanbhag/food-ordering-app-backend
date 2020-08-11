@@ -14,6 +14,11 @@ public class CouponDao {
     @PersistenceContext
     EntityManager entityManager;
 
+    /**
+     * Method takes a coupon name and returns the matching CouponEntity
+     * @param couponName Coupon Name
+     * @return CouponEntity
+     */
     public CouponEntity getCouponByCouponName(final String couponName) {
         try {
             return entityManager.createNamedQuery("Coupon.ByName", CouponEntity.class)

@@ -15,11 +15,15 @@ public class AppConstants {
     // Regular Expression to check  if basic auth token is valid
     public static final String REG_EXP_BASIC_AUTH = "^.+[\\:]{1,1}.+$";
 
-    //public static final int TWO_2 = 2;
+    //Number '7'
     public static final Integer SEVEN_7 = 7;
+    //Number '8'
     public static final Integer EIGHT_8 = 8;
+    //Number '10'
     public static final Integer NUMBER_10 = 10;
+    // Character ':'
     public static final String COLON = ":";
+    // Text 'access-token'
     public static final String HTTP_ACCESS_TOKEN_HEADER = "access-token";
 
 }

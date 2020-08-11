@@ -15,8 +15,13 @@ public class OrderDao {
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<OrderEntity> getOrdersByCustomers(final String uuid) {
-        return entityManager.createNamedQuery("Orders.ByCustomer", OrderEntity.class).setParameter("customerId",uuid).getResultList();
+    /**
+     * Method takes a Customer Id as input and list all orders made by the customer
+     * @param customerId Customer Id
+     * @return List of OrderEntity
+     */
+    public List<OrderEntity> getOrdersForCustomer(final String customerId) {
+        return entityManager.createNamedQuery("Orders.ByCustomer", OrderEntity.class).setParameter("customerId",customerId).getResultList();
     }
 
     public OrderEntity saveOrder(OrderEntity orderEntity){
