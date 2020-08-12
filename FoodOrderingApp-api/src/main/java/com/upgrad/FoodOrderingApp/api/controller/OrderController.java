@@ -17,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/order")
 public class OrderController {
-    // TODO :
-    //  - Save Order - “/order”
 
     @Autowired
     private CustomerService customerService;
@@ -49,11 +48,20 @@ public class OrderController {
      * @throws AuthorizationFailedException on incorrect/invalid access token
      * @throws CouponNotFoundException on incorrect/invalid/non-existent coupon name
      */
+    @CrossOrigin
     @RequestMapping(path = "/coupon/{coupon_name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CouponDetailsResponse> getCoupon(@RequestHeader("authorization") final String headerParam, @PathVariable("coupon_name") final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
+
+        // Get Bearer Authorization Token
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
+
+        // Get Customer from Authorization Token
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        // Get coupon details from the database (By Name)
         final CouponEntity coupon = orderService.getCouponByCouponName(couponName);
+
+        // Map coupon details to coupon details response
         CouponDetailsResponse response = new CouponDetailsResponse();
         response.id(UUID.fromString(coupon.getUuid())).couponName(coupon.getCouponName()).percent(coupon.getPercent());
         return new ResponseEntity<CouponDetailsResponse>(response, HttpStatus.OK);
@@ -65,12 +73,21 @@ public class OrderController {
      * @return ResponseEntity with list of all of the customer's orders
      * @throws AuthorizationFailedException on invalid/incorrect access token
      */
+    @CrossOrigin
     @RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerOrderResponse> getOrders(@RequestHeader("authorization") final String headerParam) throws AuthorizationFailedException {
+
+        // Get Bearer Authorization Token
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
+
+        // Get Customer from Authorization Token
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         CustomerOrderResponse response = new CustomerOrderResponse();
+
+        // Get orders for customer as OrderEntities
         List<OrderEntity> orderEntities = orderService.getOrdersByCustomers(customerEntity.getUuid());
+
+        // Map order entities to order list response
         orderEntities.forEach(orderEntity -> {
             OrderList orderList = new OrderList()
                 .id(UUID.fromString(orderEntity.getUuid()))
@@ -118,6 +135,7 @@ public class OrderController {
             response.addOrdersItem(orderList);
         });
 
+        // Return response with right HttpStatus
         if (response.getOrders() == null || response.getOrders().isEmpty()) {
             return new ResponseEntity<CustomerOrderResponse>(response, HttpStatus.NO_CONTENT);
         } else {

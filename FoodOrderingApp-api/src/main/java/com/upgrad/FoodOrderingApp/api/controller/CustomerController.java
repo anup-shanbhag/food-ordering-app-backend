@@ -41,7 +41,10 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST, path = "/signup",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignupCustomerResponse> registerCustomer(@RequestBody(required = false) final SignupCustomerRequest request) throws SignUpRestrictedException, UnexpectedException {
+        // Validate if all necessary information is available in the input request
         validateSignupRequest(request);
+
+        // Map request object to Customer Entity object
         final CustomerEntity newCustomerEntity = new CustomerEntity();
         newCustomerEntity.setUuid(UUID.randomUUID().toString());
         newCustomerEntity.setFirstName(request.getFirstName());
@@ -50,7 +53,11 @@ public class CustomerController {
         newCustomerEntity.setPassword(request.getPassword());
         newCustomerEntity.setContactNumber(request.getContactNumber());
         newCustomerEntity.setSalt(UUID.randomUUID().toString());
+
+        // Store Customer Entity in the database
         final CustomerEntity customerEntity = customerService.saveCustomer(newCustomerEntity);
+
+        // Map persisted Customer Entity to Response Object
         final SignupCustomerResponse response = new SignupCustomerResponse();
         response.id(customerEntity.getUuid()).status("CUSTOMER CREATED SUCCESSFULLY");
         return new ResponseEntity<SignupCustomerResponse>(response, HttpStatus.CREATED);
@@ -66,12 +73,21 @@ public class CustomerController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> loginCustomer(@RequestHeader("authorization") final String headerParam) throws AuthenticationFailedException, UnexpectedException {
+        // Get Basic Authentication Token
         final String authToken = new String(Base64.getDecoder().decode(AppUtils.getBasicAuthToken(headerParam)));
+
+        // Validate Basic Authentication Token
         validateLoginRequest(authToken);
         StringTokenizer tokens =  new StringTokenizer(authToken, AppConstants.COLON);
+
+        // Login Customer and fetch authorization details
         final CustomerAuthEntity customerAuthEntity = customerService.authenticate(tokens.nextToken(),tokens.nextToken());
+
+        // Map customer & access token to Login response object
         final LoginResponse response = new LoginResponse();
         response.id(customerAuthEntity.getCustomer().getUuid()).firstName(customerAuthEntity.getCustomer().getFirstName()).lastName(customerAuthEntity.getCustomer().getLastName()).contactNumber(customerAuthEntity.getCustomer().getContactNumber()).emailAddress(customerAuthEntity.getCustomer().getEmail()).message("LOGGED IN SUCCESSFULLY");
+
+        // Set Http Headers
         HttpHeaders headers = new HttpHeaders();
         headers.add(AppConstants.HTTP_ACCESS_TOKEN_HEADER,customerAuthEntity.getAccessToken());
         headers.setAccessControlExposeHeaders(Collections.singletonList(AppConstants.HTTP_ACCESS_TOKEN_HEADER));
@@ -88,8 +104,13 @@ public class CustomerController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, path = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LogoutResponse> logoutCustomer(@RequestHeader("authorization") final String headerParam) throws AuthorizationFailedException, UnexpectedException {
+        // Get Bearer Authorization Token
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
+
+        // Logout customer and invalidate authorization token
         final CustomerAuthEntity customerAuthEntity = customerService.logout(accessToken);
+
+        // Map customer to logout response
         final LogoutResponse response = new LogoutResponse();
         response.id(customerAuthEntity.getCustomer().getUuid()).message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(response, HttpStatus.OK);
@@ -107,12 +128,24 @@ public class CustomerController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT, path = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdateCustomerResponse> updateCustomer(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdateCustomerRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
+
+        // Validate if all necessary information is available in the input request
         validateUpdateCustomerRequest(request);
+
+        // Get Bearer Authorization Token
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
+
+        // Get Customer Entity from Access Token
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        // Update customer details
         customerEntity.setFirstName(request.getFirstName());
         customerEntity.setLastName(request.getLastName());
+
+        // Store updated Customer Entity in the database
         final CustomerEntity updatedCustomerEntity = customerService.updateCustomer(customerEntity);
+
+        // Map updated customer to Update Customer Response object
         final UpdateCustomerResponse response = new UpdateCustomerResponse();
         response.id(updatedCustomerEntity.getUuid()).firstName(updatedCustomerEntity.getFirstName()).lastName(updatedCustomerEntity.getLastName()).status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdateCustomerResponse>(response, HttpStatus.OK);
@@ -130,10 +163,20 @@ public class CustomerController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String headerParam, @RequestBody(required = false) final UpdatePasswordRequest request) throws UnexpectedException, AuthorizationFailedException, UpdateCustomerException {
+
+        // Validate if all necessary information is available in the input request
         validatePasswordChangeRequest(request);
+
+        // Get Bearer Authorization Token
         final String accessToken = AppUtils.getBearerAuthToken(headerParam);
+
+        // Get Customer Entity from Access Token
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        // Update and store password
         final CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(request.getOldPassword(),request.getNewPassword(),customerEntity);
+
+        // Map updated customer to Update Customer Response object
         final UpdatePasswordResponse response = new UpdatePasswordResponse();
         response.id(updatedCustomerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(response, HttpStatus.OK);
@@ -145,6 +188,7 @@ public class CustomerController {
      * @throws SignUpRestrictedException when one ore more of first name, password, email & contact number are missing on the request
      */
     private void validateSignupRequest(SignupCustomerRequest request) throws SignUpRestrictedException {
+        // Throw error if First Name/Password/Email Address/Contact Number are missing or empty
         if((request.getContactNumber() == null) || (request.getFirstName() == null) ||
                 (request.getPassword() == null) || (request.getEmailAddress() == null) ||
                 (request.getContactNumber().isEmpty()) || (request.getFirstName().isEmpty()) ||
@@ -159,6 +203,7 @@ public class CustomerController {
      * @throws AuthenticationFailedException on incorrect/invalid basic authentication token
      */
     private void validateLoginRequest(String authorizationToken) throws AuthenticationFailedException {
+        // Throw error if format of Basic Authentication Token is not right
         if(!authorizationToken.matches(AppConstants.REG_EXP_BASIC_AUTH)){
             throw new AuthenticationFailedException(ATH_003.getCode(),ATH_003.getDefaultMessage());
         }
@@ -170,6 +215,7 @@ public class CustomerController {
      * @throws UpdateCustomerException when first name is missing on the request
      */
     private void validateUpdateCustomerRequest(UpdateCustomerRequest request) throws UpdateCustomerException {
+        // Throw error if First Name is missing or empty
         if(request.getFirstName()==null || request.getFirstName().isEmpty()){
             throw new UpdateCustomerException(UCR_002.getCode(),UCR_002.getDefaultMessage());
         }
@@ -181,6 +227,7 @@ public class CustomerController {
      * @throws UpdateCustomerException when old password or new password or both are missing on the input request
      */
     private void validatePasswordChangeRequest(UpdatePasswordRequest request) throws UpdateCustomerException {
+        // Throw error if Old/New Password(s) are missing or empty
         if((request.getOldPassword() == null) || (request.getNewPassword() == null) || (request.getOldPassword().isEmpty()) || (request.getNewPassword().isEmpty())){
             throw new UpdateCustomerException(UCR_003.getCode(), UCR_003.getDefaultMessage());
         }
