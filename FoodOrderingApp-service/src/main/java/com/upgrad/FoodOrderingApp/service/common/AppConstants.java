@@ -11,7 +11,7 @@ public class AppConstants {
     // Regular Expression to check  if password has at least 1 special character.
     public static final String REG_EXP_PASSWD_SPECIAL_CHAR = "^.*[\\#\\@\\$\\%\\&\\*\\!\\^].*$";
     // Regular Expression to check  if email is valid
-    public static final String REG_EXP_VALID_EMAIL = "^[a-zA-Z0-9]{3,3}[\\@]{1,1}[a-zA-Z0-9]{2,2}[\\.]{1,1}[a-zA-Z0-9]{2,2}$";
+    public static final String REG_EXP_VALID_EMAIL = "^[a-zA-Z0-9]*[\\@]{1,1}[a-zA-Z0-9]*[\\.]{1,1}[a-zA-Z0-9]*$";
     // Regular Expression to check  if basic auth token is valid
     public static final String REG_EXP_BASIC_AUTH = "^.+[\\:]{1,1}.+$";
 
