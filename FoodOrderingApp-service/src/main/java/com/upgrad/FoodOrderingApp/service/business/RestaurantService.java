@@ -46,7 +46,11 @@ public class RestaurantService {
         if (uuid.trim().length() <= 0) {
             throw new RestaurantNotFoundException(RNF_002.getCode(), RNF_002.getDefaultMessage());
         }
-        return restaurantDao.getRestaurantByID(uuid);
+        RestaurantEntity restaurantEntity = restaurantDao.getRestaurantByID(uuid);
+        if(restaurantEntity == null){
+            throw new RestaurantNotFoundException(RNF_001.getCode(), RNF_001.getDefaultMessage());
+        }
+        return restaurantEntity;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
