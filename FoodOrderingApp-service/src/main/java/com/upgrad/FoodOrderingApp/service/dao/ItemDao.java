@@ -1,6 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.stereotype.Repository;
@@ -15,42 +16,20 @@ public class ItemDao{
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<ItemEntity> getItemsByCategoryAndRestaurant(RestaurantEntity restaurant, CategoryEntity category){
-        try {
-            return entityManager.createNamedQuery("CategoryItemEntity.getItemByRestaurantAndCategory", ItemEntity.class)
-                    .setParameter("restaurant", restaurant)
-                    .setParameter("category", category)
-                    .getResultList();
-        }catch (NoResultException nre){
-            return null;
-        }
-    }
-
     public List<ItemEntity> getItemsByCategory(CategoryEntity category){
-        try {
-            return entityManager.createNamedQuery("CategoryItemEntity.getItemByRestaurantAndCategory", ItemEntity.class)
-                    .setParameter("category", category)
-                    .getResultList();
-        }catch (NoResultException nre){
-            return null;
-        }
-    }
-
-    public ItemEntity getItemByUUID(String uuid) {
-        try {
-            return entityManager.createNamedQuery("fetchItemByID", ItemEntity.class)
-                    .setParameter("uuid", uuid)
-                    .getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
+        return entityManager.createNamedQuery("CategoryItemEntity.getItemByCategory",ItemEntity.class)
+            .setParameter("category",category)
+            .getResultList();
     }
 
 
     public ItemEntity getItemById(String uuid){
-        return entityManager.createNamedQuery("ItemEntity.getItemById",ItemEntity.class)
-            .setParameter("uuid",uuid)
-            .getSingleResult();
+        try {
+            return entityManager.createNamedQuery("ItemEntity.getItemById", ItemEntity.class)
+                .setParameter("uuid", uuid)
+                .getSingleResult();
+        }catch(NoResultException nre){
+            return null;
+        }
     }
 }
-

@@ -6,10 +6,18 @@ import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class ItemService {
@@ -26,11 +34,19 @@ public class ItemService {
     @Autowired
     private OrderDao orderDao;
 
-    public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid) {
-        RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
-        CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-        return itemDao.getItemsByCategoryAndRestaurant(restaurant, category);
-    }
+  public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
+      RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
+      Set<ItemEntity> restaurantItemEntityList = restaurant.getItem();
+       CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
+       List<ItemEntity> itemEntityList = itemDao.getItemsByCategory(category);
+
+       for(ItemEntity itemEntity : restaurantItemEntityList) {
+          if(!itemEntityList.contains(itemEntity)){
+              itemEntityList.add(itemEntity);
+          }
+       }
+      return  itemEntityList;
+  }
 
     public List<ItemEntity> getItemsByCategory(String categoryUuid) {
         CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
@@ -72,7 +88,7 @@ public class ItemService {
 
         List<ItemEntity> sortedItemEntityList = new ArrayList<>();
         unsortedItemCountList.forEach(list ->
-                sortedItemEntityList.add(itemDao.getItemByUUID(list.getKey()))
+                sortedItemEntityList.add(itemDao.getItemById(list.getKey()))
         );
 
         return sortedItemEntityList;
