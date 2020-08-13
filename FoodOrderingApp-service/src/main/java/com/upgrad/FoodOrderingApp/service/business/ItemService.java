@@ -35,17 +35,27 @@ public class ItemService {
     private OrderDao orderDao;
 
   public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
+      //get Restaurant
       RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
+      //get items in restaurant
       Set<ItemEntity> restaurantItemEntityList = restaurant.getItem();
-       CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-       List<ItemEntity> itemEntityList = itemDao.getItemsByCategory(category);
 
-       for(ItemEntity itemEntity : restaurantItemEntityList) {
-          if(!itemEntityList.contains(itemEntity)){
-              itemEntityList.add(itemEntity);
+      //get the category
+       CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
+       List<ItemEntity> categoryItemEntityList = itemDao.getItemsByCategory(category);
+       List<ItemEntity> itemEntityList = new ArrayList<>();
+
+       // Categorize the restaurant items into the category under consideration
+      for (ItemEntity restaurantItem : restaurantItemEntityList) {
+          for (ItemEntity categoryItem :categoryItemEntityList) {
+              if (restaurantItem.getUuid().equals(categoryItem.getUuid())) {
+                  itemEntityList.add(restaurantItem);
+              }
           }
-       }
-      return  itemEntityList;
+      }
+      //sort the items by name , case insensitive
+      itemEntityList.sort(Comparator.comparing(ItemEntity::getItemName,String.CASE_INSENSITIVE_ORDER));
+       return itemEntityList;
   }
 
     public List<ItemEntity> getItemsByCategory(String categoryUuid) {

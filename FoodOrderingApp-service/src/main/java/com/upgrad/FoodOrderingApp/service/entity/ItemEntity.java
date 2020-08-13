@@ -17,9 +17,10 @@ import java.util.Set;
 @Table(name = "item")
 @NamedQueries({
     @NamedQuery(name="ItemEntity.getItemById",query = "SELECT i FROM ItemEntity i WHERE i.uuid=:uuid")
+
 })
 
-public class ItemEntity implements Serializable {
+public class ItemEntity implements Serializable,Comparable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "itemIdGenerator")
@@ -132,4 +133,8 @@ public class ItemEntity implements Serializable {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }
