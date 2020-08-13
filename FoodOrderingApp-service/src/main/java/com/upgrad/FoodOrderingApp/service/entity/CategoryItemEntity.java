@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="category_item")
 @NamedQueries({
-    @NamedQuery(name="CategoryItemEntity.getItemByRestaurantAndCategory",query = "SELECT ci.itemEntity FROM CategoryItemEntity ci WHERE ci.categoryEntity=:category AND ci.itemEntity=:restaurant"),
     @NamedQuery(name="CategoryItemEntity.getItemByCategory",query = "SELECT ci.itemEntity FROM CategoryItemEntity ci WHERE ci.categoryEntity=:category")
 
 })

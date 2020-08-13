@@ -74,7 +74,7 @@ public class RestaurantEntity implements Serializable {
     @JoinTable(name = "restaurant_item",
             joinColumns = {@JoinColumn(name = "restaurant_id")},
             inverseJoinColumns = {@JoinColumn(name = "item_id")})
-    private Set<ItemEntity> item = new HashSet<ItemEntity>();
+    private Set<ItemEntity> items = new HashSet<ItemEntity>();
 
     public Integer getId() {
         return id;
@@ -149,11 +149,11 @@ public class RestaurantEntity implements Serializable {
     }
 
     public Set<ItemEntity> getItem() {
-        return item;
+        return items;
     }
 
     public void setItem(Set<ItemEntity> item) {
-        this.item = item;
+        this.items = item;
     }
 
     @Override

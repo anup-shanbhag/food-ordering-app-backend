@@ -42,12 +42,6 @@ public class RestaurantController {
     @Autowired
     private CustomerService customerService;
 
-    // TODO :
-    //  - Get All Restaurants - "/restaurant"
-    //  - Get Restaurant/s by Name - “/restaurant/name/{reastaurant_name}”
-    //  - Get Restaurants by Category Id “/restaurant/category/{category_id}”
-    //  - Get Restaurant by Restaurant ID - “/api/restaurant/{restaurant_id}”
-    //  - Update Restaurant Details- “/api/restaurant/{restaurant_id}”
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantListResponse> getAllRestaurantDetails() {
@@ -132,7 +126,7 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
     }
 
-    @RequestMapping("/category/{category_id}")
+    @RequestMapping(path="/category/{category_id}", method = RequestMethod.GET)
     public ResponseEntity<RestaurantListResponse> getRestaurantByCategory(@PathVariable("category_id") String categoryId) throws CategoryNotFoundException {
         List<RestaurantList> restaurantList = new ArrayList<RestaurantList>();
         List<RestaurantEntity> restaurantEntityList = restaurantService.restaurantByCategory(categoryId);
@@ -175,7 +169,7 @@ public class RestaurantController {
 
 
 
-    @RequestMapping("/{restaurant_id}")
+    @RequestMapping(path="/{restaurant_id}",method = RequestMethod.GET)
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantById(@PathVariable("restaurant_id") String uuid) throws RestaurantNotFoundException, CategoryNotFoundException {
         RestaurantDetailsResponse restaurant = new RestaurantDetailsResponse();
 
