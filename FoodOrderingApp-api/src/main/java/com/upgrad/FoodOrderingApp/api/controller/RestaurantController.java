@@ -25,7 +25,7 @@ import java.util.*;
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/restaurant")
 public class RestaurantController {
@@ -42,7 +42,7 @@ public class RestaurantController {
     @Autowired
     private CustomerService customerService;
 
-
+    @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantListResponse> getAllRestaurantDetails() {
         List<RestaurantList> restaurantList = new ArrayList<RestaurantList>();
@@ -85,6 +85,7 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(path = "/name/{reastaurant_name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantListResponse> getAllRestaurantDetails(@PathVariable("reastaurant_name") String name) throws RestaurantNotFoundException {
         List<RestaurantList> restaurantList = new ArrayList<RestaurantList>();
@@ -126,6 +127,7 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(path="/category/{category_id}", method = RequestMethod.GET)
     public ResponseEntity<RestaurantListResponse> getRestaurantByCategory(@PathVariable("category_id") String categoryId) throws CategoryNotFoundException {
         List<RestaurantList> restaurantList = new ArrayList<RestaurantList>();
@@ -168,7 +170,7 @@ public class RestaurantController {
     }
 
 
-
+    @CrossOrigin
     @RequestMapping(path="/{restaurant_id}",method = RequestMethod.GET)
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantById(@PathVariable("restaurant_id") String uuid) throws RestaurantNotFoundException, CategoryNotFoundException {
         RestaurantDetailsResponse restaurant = new RestaurantDetailsResponse();
@@ -217,8 +219,8 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantDetailsResponse>(restaurant, HttpStatus.OK);
     }
 
-
-    @RequestMapping(method = RequestMethod.PUT, path = "/{restaurant_id}",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.PUT, path = "/{restaurant_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantUpdatedResponse> updateRestaurantDetails(
         @RequestParam(name = "customer_rating") final Double customerRating,
         @PathVariable("restaurant_id") final String restaurantId,
