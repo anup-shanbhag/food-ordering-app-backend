@@ -152,6 +152,7 @@ public class OrderController {
         final String accessToken = AppUtils.getBearerAuthToken(authorization);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setUuid(UUID.randomUUID().toString());
         orderEntity.setBill(saveOrderRequest.getBill().doubleValue());
         if(saveOrderRequest.getCouponId()!=null){
             CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
