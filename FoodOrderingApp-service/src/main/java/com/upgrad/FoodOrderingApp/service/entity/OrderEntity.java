@@ -27,7 +27,7 @@ public class OrderEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "orderIdGenerator")
-    @SequenceGenerator(name = "orderIdGenerator", sequenceName = "order_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "orderIdGenerator", sequenceName = "orders_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
