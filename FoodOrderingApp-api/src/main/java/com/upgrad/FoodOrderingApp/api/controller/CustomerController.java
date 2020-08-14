@@ -78,7 +78,7 @@ public class CustomerController {
         final String authToken = AppUtils.getBasicAuthToken(headerParam);
 
         // Validate Basic Authentication Token
-        validateLoginRequest(headerParam);
+        validateLoginRequest(authToken);
 
         StringTokenizer tokens =  new StringTokenizer(authToken, AppConstants.COLON);
 
