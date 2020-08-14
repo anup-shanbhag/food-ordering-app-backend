@@ -27,13 +27,13 @@ public class OrderDao {
     }
 
     public OrderEntity saveOrder(OrderEntity orderEntity){
-         entityManager.merge(orderEntity);
+         entityManager.persist(orderEntity);
          return orderEntity;
     }
 
 
     public OrderItemEntity saveOrderItem(OrderItemEntity orderedItem) {
-        entityManager.merge(orderedItem);
+        entityManager.persist(orderedItem);
         return orderedItem;
     }
 
