@@ -24,13 +24,13 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(AuthorizationFailedException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationFailedException(AuthorizationFailedException afe, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponse> handleAuthorizationFailedException(AuthorizationFailedException afe, WebRequest webRequest) {
         return new ResponseEntity<>(
                 new ErrorResponse().code(afe.getCode()).message(afe.getErrorMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UpdateCustomerException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationFailedException(UpdateCustomerException uce, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponse> handleUpdateCustomerException(UpdateCustomerException uce, WebRequest webRequest) {
         return new ResponseEntity<>(
                 new ErrorResponse().code(uce.getCode()).message(uce.getErrorMessage()), HttpStatus.BAD_REQUEST);
     }
@@ -76,7 +76,7 @@ public class ApplicationExceptionHandler {
             new ErrorResponse().code(rnfe.getCode()).message(rnfe.getErrorMessage()), HttpStatus.NOT_FOUND);    }
 
     @ExceptionHandler(InvalidRatingException.class)
-    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(InvalidRatingException ire, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponse> handleInvalidRatingException(InvalidRatingException ire, WebRequest webRequest) {
         return new ResponseEntity<>(
             new ErrorResponse().code(ire.getCode()).message(ire.getErrorMessage()), HttpStatus.BAD_REQUEST);    }
 

@@ -73,11 +73,13 @@ public class CustomerController {
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> loginCustomer(@RequestHeader("authorization") final String headerParam) throws AuthenticationFailedException, UnexpectedException {
+
         // Get Basic Authentication Token
-        final String authToken = new String(Base64.getDecoder().decode(AppUtils.getBasicAuthToken(headerParam)));
+        final String authToken = AppUtils.getBasicAuthToken(headerParam);
 
         // Validate Basic Authentication Token
         validateLoginRequest(authToken);
+
         StringTokenizer tokens =  new StringTokenizer(authToken, AppConstants.COLON);
 
         // Login Customer and fetch authorization details
