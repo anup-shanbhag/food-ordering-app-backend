@@ -34,7 +34,12 @@ public class AppUtils {
             throw new UnexpectedException(GEN_001);
         }
         else {
-            return new String(Base64.getDecoder().decode(basicToken));
+            try{
+                return new String(Base64.getDecoder().decode(basicToken));
+            }
+            catch(Exception e) {
+                throw new UnexpectedException(GEN_001,e.getCause());
+            }
         }
     }
 
