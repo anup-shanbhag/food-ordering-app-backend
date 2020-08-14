@@ -34,9 +34,7 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
     @Size(max = 30)
     private String categoryName;
 
-    @ManyToMany
-    @JoinTable(name = "category_item", joinColumns = @JoinColumn(name = "category_id"),
-        inverseJoinColumns = @JoinColumn(name = "item_id"))
+    @OneToMany(mappedBy = "id")
     private List<ItemEntity> items;
 
     public Integer getId() {
