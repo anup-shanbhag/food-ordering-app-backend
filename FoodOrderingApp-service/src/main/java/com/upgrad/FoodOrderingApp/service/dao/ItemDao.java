@@ -16,13 +16,22 @@ public class ItemDao{
     @PersistenceContext
     EntityManager entityManager;
 
+    /**
+     * Method takes a CategoryEntity and returns ItemEntity List the matching CategoryEntity
+     * @param category CategoryEntity
+     * @return itemEntity List
+     */
     public List<ItemEntity> getItemsByCategory(CategoryEntity category){
         return entityManager.createNamedQuery("CategoryItemEntity.getItemByCategory",ItemEntity.class)
             .setParameter("category",category)
             .getResultList();
     }
 
-
+    /**
+     * Method takes a item uuid and returns the matching ItemEntity
+     * @param uuid item uuid
+     * @return ItemEntity
+     */
     public ItemEntity getItemById(String uuid){
         try {
             return entityManager.createNamedQuery("ItemEntity.getItemById", ItemEntity.class)
