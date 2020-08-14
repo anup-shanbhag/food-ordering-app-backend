@@ -16,8 +16,8 @@ public class CategoryItemEntity {
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator ="CategoryItemEntityIdGenerator")
-    @SequenceGenerator(name="CategoryItemEntityIdGenerator", sequenceName = "category_item_id_seq")
+    @GeneratedValue(generator = "CategoryItemEntityIdGenerator")
+    @SequenceGenerator(name = "CategoryItemEntityIdGenerator",sequenceName = "category_item_id_seq", initialValue = 1, allocationSize = 1)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)
