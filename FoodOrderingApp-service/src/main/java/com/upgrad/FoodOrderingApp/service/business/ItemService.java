@@ -1,26 +1,17 @@
 package com.upgrad.FoodOrderingApp.service.business;
 
-import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
 import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
-import com.upgrad.FoodOrderingApp.service.entity.*;
-import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
-import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class ItemService {
@@ -37,29 +28,35 @@ public class ItemService {
     @Autowired
     private OrderDao orderDao;
 
-  public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid){
-      //get Restaurant
-      RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
-      //get items in restaurant
-      Set<ItemEntity> restaurantItemEntityList = restaurant.getItem();
+    /**
+     * Method takes restaurant Uuid, category Uuid  and return ItemEntity List from the database
+     * @param restaurantUuid restaurant uuid to retrieve restaurant
+     * @param categoryUuid category uuid to retrieve item Entity
+     * @return ItemEntity list of restaurantEntity
+     */
+    public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid) {
+        //get Restaurant
+        RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
+        //get items in restaurant
+        Set<ItemEntity> restaurantItemEntityList = restaurant.getItem();
 
-      //get the category
-       CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-       List<ItemEntity> categoryItemEntityList = itemDao.getItemsByCategory(category);
-       List<ItemEntity> itemEntityList = new ArrayList<>();
+        //get the category
+        CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
+        List<ItemEntity> categoryItemEntityList = itemDao.getItemsByCategory(category);
+        List<ItemEntity> itemEntityList = new ArrayList<>();
 
-       // Categorize the restaurant items into the category under consideration
-      for (ItemEntity restaurantItem : restaurantItemEntityList) {
-          for (ItemEntity categoryItem :categoryItemEntityList) {
-              if (restaurantItem.getUuid().equals(categoryItem.getUuid())) {
-                  itemEntityList.add(restaurantItem);
-              }
-          }
-      }
-      //sort the items by name , case insensitive
-      itemEntityList.sort(Comparator.comparing(ItemEntity::getItemName,String.CASE_INSENSITIVE_ORDER));
-       return itemEntityList;
-  }
+        // Categorize the restaurant items into the category under consideration
+        for (ItemEntity restaurantItem : restaurantItemEntityList) {
+            for (ItemEntity categoryItem : categoryItemEntityList) {
+                if (restaurantItem.getUuid().equals(categoryItem.getUuid())) {
+                    itemEntityList.add(restaurantItem);
+                }
+            }
+        }
+        //sort the items by name , case insensitive
+        itemEntityList.sort(Comparator.comparing(ItemEntity::getItemName, String.CASE_INSENSITIVE_ORDER));
+        return itemEntityList;
+    }
 
     public List<ItemEntity> getItemsByCategory(String categoryUuid) {
         CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
