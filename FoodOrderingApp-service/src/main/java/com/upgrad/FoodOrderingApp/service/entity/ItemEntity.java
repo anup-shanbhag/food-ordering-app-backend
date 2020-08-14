@@ -23,8 +23,8 @@ import java.util.Set;
 public class ItemEntity implements Serializable,Comparable{
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "itemIdGenerator")
-    @SequenceGenerator(name = "itemIdGenerator", sequenceName = "item_id_seq")
+    @GeneratedValue(generator = "itemIdGenerator")
+    @SequenceGenerator(name = "itemIdGenerator",sequenceName = "item_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;

@@ -25,6 +25,12 @@ public class ItemController {
     @Autowired
     private RestaurantService restaurantService;
 
+    /**
+     * Method takes restaurant_id from customer, returns top 5 popular items
+     * @param restaurantId restaurant id as request path var
+     * @return ResponseEntity with list of items
+     * @throws RestaurantNotFoundException on invalid restaurantId
+     */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET,
             path = "/item/restaurant/{restaurant_id}",
@@ -32,12 +38,15 @@ public class ItemController {
     public ResponseEntity<ItemListResponse> getItemsByPopularity(@PathVariable("restaurant_id") final String restaurantId)
             throws RestaurantNotFoundException {
 
+        // Retrieve RestaurantEntity matching restaurantId from database
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurantId);
 
+        // Retrieve ItemEntity List matching restaurantId and sorted by popularity
         List<ItemEntity> itemList = itemService.getItemsByPopularity(restaurantEntity);
 
         ItemListResponse itemListResponse = new ItemListResponse();
 
+        // Map retrieved ItemEntity to Response Object List
         int count =0;
         for (ItemEntity itemEntity : itemList){
             if(count<5){

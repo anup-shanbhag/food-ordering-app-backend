@@ -11,7 +11,10 @@ import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
-import com.upgrad.FoodOrderingApp.service.exception.*;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
+import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +23,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 
 @CrossOrigin
@@ -62,6 +67,7 @@ public class RestaurantController {
             restaurant.setPhotoURL(restaurantEntity.getPhotoUrl());
             restaurant.setCustomerRating(new BigDecimal(Double.toString(restaurantEntity.getCustomerRating())).setScale(2, RoundingMode.HALF_DOWN));
             restaurant.setNumberCustomersRated(restaurantEntity.getNumberOfCustomersRated());
+            restaurant.setAveragePrice(restaurantEntity.getAveragePriceForTwo());
 
             //extract address and transform to response object
             RestaurantDetailsResponseAddress address = new RestaurantDetailsResponseAddress();
@@ -115,6 +121,7 @@ public class RestaurantController {
             restaurant.setPhotoURL(restaurantEntity.getPhotoUrl());
             restaurant.setCustomerRating(new BigDecimal(Double.toString(restaurantEntity.getCustomerRating())).setScale(2, RoundingMode.HALF_DOWN));
             restaurant.setNumberCustomersRated(restaurantEntity.getNumberOfCustomersRated());
+            restaurant.setAveragePrice(restaurantEntity.getAveragePriceForTwo());
 
             //extract address and transform to response object
             RestaurantDetailsResponseAddress address = new RestaurantDetailsResponseAddress();
@@ -262,9 +269,9 @@ public class RestaurantController {
 
     /**
      * Methods takes updated password information from the customer and updates it in the system
-     * @param headerParam Customer's access token as request header param
-     * @param requestparam decimal value between 1.0 and 5.0
-     * @param pathvariable restaurant id
+     * @param authorization Customer's access token as request header param
+     * @param customerRating decimal value between 1.0 and 5.0
+     * @param restaurantId restaurant id
      * @return ResponseEntity with message
      * @throws AuthorizationFailedException on incorrect/invalid access token
      * @throws RestaurantNotFoundException if id is empty, No restaurant by this id

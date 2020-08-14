@@ -3,24 +3,24 @@ package com.upgrad.FoodOrderingApp.api.controller;
 import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.business.AddressService;
 import com.upgrad.FoodOrderingApp.service.business.CustomerService;
+import com.upgrad.FoodOrderingApp.service.common.AppUtils;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.GEN_001;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class AddressController {
@@ -31,6 +31,15 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    /**
+     * Method takes Customer's SaveAddress request, stores customer address in the system
+     * @param saveAddressRequest Customer's saveAddress request having  details like flat, locality, city etc.
+     * @return ResponseEntity with Address Id
+     * @throws SaveAddressException on invalid saveAddress request
+     * @throws AddressNotFoundException on invalid state id
+     * @throws AuthorizationFailedException on invalid customer access-token
+     * @throws UnexpectedException on any other errors
+     */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, path = "/address", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,12 +47,13 @@ public class AddressController {
                                                            @RequestBody(required = false) final SaveAddressRequest saveAddressRequest)
             throws AuthorizationFailedException, AddressNotFoundException, SaveAddressException {
 
-        final String accessToken = StringUtils.substringAfter(authorization, "Bearer ");
-        if (accessToken == null || accessToken.isEmpty()) {
-            throw new UnexpectedException(GEN_001);
-        }
+        // Get Bearer Authorization Token
+        final String accessToken = AppUtils.getBearerAuthToken(authorization);
+
+        // Get customer details on successful authentication of accessToken
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
+        // Generate Address entity for insert
         AddressEntity address = new AddressEntity();
         address.setFlatBuilNo(saveAddressRequest.getFlatBuildingName());
         address.setLocality(saveAddressRequest.getLocality());
@@ -54,8 +64,10 @@ public class AddressController {
         StateEntity state = addressService.getStateByUUID(saveAddressRequest.getStateUuid());
         address.setCustomers(customerEntity);
 
+        // Store Address entity in the database
         AddressEntity savedAddress = addressService.saveAddress(address, state);
 
+        // Map persisted Address Entity to Response Object
         SaveAddressResponse addressResponse = new SaveAddressResponse()
                 .id(savedAddress.getUuid())
                 .status("ADDRESS SUCCESSFULLY REGISTERED");
@@ -63,21 +75,30 @@ public class AddressController {
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);
     }
 
+    /**
+     * Method takes authorization from customer, returns all address mapped to his profile
+     * @param authorization Customer's access token as request header
+     * @return ResponseEntity with list of Addresses
+     * @throws AuthorizationFailedException on invalid customer access-token
+     * @throws UnexpectedException on any other errors
+     */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/address/customer", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AddressListResponse> getAllAddresses(@RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException {
 
-        final String accessToken = StringUtils.substringAfter(authorization, "Bearer ");
-        if (accessToken == null || accessToken.isEmpty()) {
-            throw new UnexpectedException(GEN_001);
-        }
+        // Get Bearer Authorization Token
+        final String accessToken = AppUtils.getBearerAuthToken(authorization);
+
+        // Get customer details on successful authentication of accessToken
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
+        // Retrieve addresses from database
         List<AddressEntity> sortedAddress = addressService.getAllAddress(customerEntity);
 
         List<AddressList> addressesList = new ArrayList<>();
 
+        // Map retrieved Address Entity to Response Object List
         sortedAddress.forEach(address -> {
             AddressListState addressListState = new AddressListState();
             addressListState.setId(UUID.fromString(address.getState().getUuid()));
@@ -97,43 +118,60 @@ public class AddressController {
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
 
+    /**
+     * Method takes address id from customer, delete address mapped to his profile
+     * @param authorization Customer's access token as request header
+     * @param addressId Address id to be deleted
+     * @return ResponseEntity with id of address deleted
+     * @throws AddressNotFoundException on invalid address id
+     * @throws AuthorizationFailedException on invalid customer access-token
+     * @throws UnexpectedException on any other errors
+     */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.DELETE, path = "/address/{address_id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader("authorization") final String authorization,
                                                                @PathVariable(value = "address_id") final String addressId)
             throws AuthorizationFailedException, AddressNotFoundException {
-        final String accessToken = StringUtils.substringAfter(authorization, "Bearer ");
-        if (accessToken == null || accessToken.isEmpty()) {
-            throw new UnexpectedException(GEN_001);
-        }
+        // Get Bearer Authorization Token
+        final String accessToken = AppUtils.getBearerAuthToken(authorization);
+
+        // Get customer details on successful authentication of accessToken
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
+        // Get address entity of address to be deleted
         AddressEntity address = addressService.getAddressByUUID(addressId, customerEntity);
 
-        AddressEntity deletedAddress = new AddressEntity();
+        AddressEntity deletedAddress;
+
         DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse();
 
-        if (address.getOrders().isEmpty()) {
+
+        if (address.getOrders().isEmpty()) { // If address have no history of orders, delete the address from database
             deletedAddress = addressService.deleteAddress(address);
-            deleteAddressResponse.status("ADDRESS DELETED SUCCESSFULLY");
-        } else {
+        } else { // If address have history of orders, soft delete (deactivate) the address from database
             address.setActive(0);
             deletedAddress = addressService.deactivateAddress(address);
-            deleteAddressResponse.status("ADDRESS DEACTIVATED SUCCESSFULLY");
         }
 
+        // Map deleted Address status & id to Response Object
+        deleteAddressResponse.status("ADDRESS DELETED SUCCESSFULLY");
         deleteAddressResponse.id(UUID.fromString(deletedAddress.getUuid()));
-
         return new ResponseEntity<DeleteAddressResponse>(deleteAddressResponse, HttpStatus.OK);
     }
 
+    /**
+     * Method takes no input from customer, returns all states
+     * @return ResponseEntity with list of States
+     */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/states", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StatesListResponse> getAllStates() {
 
+        // Retrieve all states from database
         List<StateEntity> states = addressService.getAllStates();
 
+        // Map retrieved State Entity to Response Object List
         if (!states.isEmpty()) {
             List<StatesList> statesList = new LinkedList<>();
             states.forEach(state -> {

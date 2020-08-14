@@ -18,8 +18,8 @@ import java.util.List;
 public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressIdGenerator")
-    @SequenceGenerator(name = "addressIdGenerator", sequenceName = "address_id_seq")
+    @GeneratedValue(generator = "addressIdGenerator")
+    @SequenceGenerator(name = "addressIdGenerator",sequenceName = "address_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
