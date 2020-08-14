@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class StateEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stateIdGenerator")
-    @SequenceGenerator(name = "stateIdGenerator", sequenceName = "state_id_seq")
+    @GeneratedValue(generator = "stateIdGenerator")
+    @SequenceGenerator(name = "stateIdGenerator", sequenceName = "state_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
