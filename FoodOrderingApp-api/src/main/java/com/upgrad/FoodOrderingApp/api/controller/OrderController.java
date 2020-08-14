@@ -153,12 +153,27 @@ public class OrderController {
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setBill(saveOrderRequest.getBill().doubleValue());
-        CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
-        orderEntity.setCoupon(couponEntity);
-        orderEntity.setDiscount(saveOrderRequest.getDiscount().doubleValue());
+        if(saveOrderRequest.getCouponId()!=null){
+            CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+            orderEntity.setCoupon(couponEntity);
+        }
+        else{
+            orderEntity.setCoupon(null);
+        }
+        if(saveOrderRequest.getDiscount()!=null){
+            orderEntity.setDiscount(saveOrderRequest.getDiscount().doubleValue());
+        }
+        else{
+            orderEntity.setDiscount(BigDecimal.ZERO.doubleValue());
+        }
         orderEntity.setDate(LocalDateTime.now());
-        PaymentEntity paymentEntity = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
-        orderEntity.setPayment(paymentEntity);
+        if(saveOrderRequest.getPaymentId()!=null){
+            PaymentEntity paymentEntity = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
+            orderEntity.setPayment(paymentEntity);
+        }
+        else{
+            orderEntity.setPayment(null);
+        }
         orderEntity.setCustomer(customerEntity);
         AddressEntity addressEntity = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
         orderEntity.setAddress(addressEntity);
@@ -177,7 +192,6 @@ public class OrderController {
             orderItemEntities.add(orderedItem);
             orderService.saveOrderItem(orderedItem);
         }
-
         SaveOrderResponse saveOrderResponse = new SaveOrderResponse();
         saveOrderResponse.setStatus("ORDER SUCCESSFULLY PLACED");
         saveOrderResponse.setId(savedOrderEntity.getUuid());
