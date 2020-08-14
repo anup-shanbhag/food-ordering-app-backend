@@ -120,7 +120,7 @@ public class AddressController {
         } else {
             address.setActive(0);
             deletedAddress = addressService.deactivateAddress(address);
-            deleteAddressResponse.status("ADDRESS DEACTIVATED SUCCESSFULLY");
+            deleteAddressResponse.status("ADDRESS DELETED SUCCESSFULLY");
         }
 
         deleteAddressResponse.id(UUID.fromString(deletedAddress.getUuid()));

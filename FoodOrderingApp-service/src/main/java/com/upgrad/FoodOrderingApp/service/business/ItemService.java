@@ -40,6 +40,7 @@ public class ItemService {
        CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
        List<ItemEntity> itemEntityList = itemDao.getItemsByCategory(category);
 
+
        for(ItemEntity itemEntity : restaurantItemEntityList) {
           if(!itemEntityList.contains(itemEntity)){
               itemEntityList.add(itemEntity);

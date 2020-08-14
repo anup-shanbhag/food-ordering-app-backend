@@ -55,6 +55,7 @@ public class RestaurantController {
             restaurant.setPhotoURL(restaurantEntity.getPhotoUrl());
             restaurant.setCustomerRating(new BigDecimal(Double.toString(restaurantEntity.getCustomerRating())));
             restaurant.setNumberCustomersRated(restaurantEntity.getNumberOfCustomersRated());
+            restaurant.setAveragePrice(restaurantEntity.getAveragePriceForTwo());
 
             RestaurantDetailsResponseAddress address = new RestaurantDetailsResponseAddress();
             address.setId(UUID.fromString((restaurantEntity.getAddress().getUuid())));
@@ -97,6 +98,7 @@ public class RestaurantController {
             restaurant.setPhotoURL(restaurantEntity.getPhotoUrl());
             restaurant.setCustomerRating(new BigDecimal(Double.toString(restaurantEntity.getCustomerRating())));
             restaurant.setNumberCustomersRated(restaurantEntity.getNumberOfCustomersRated());
+            restaurant.setAveragePrice(restaurantEntity.getAveragePriceForTwo());
 
             RestaurantDetailsResponseAddress address = new RestaurantDetailsResponseAddress();
             address.setId(UUID.fromString((restaurantEntity.getAddress().getUuid())));

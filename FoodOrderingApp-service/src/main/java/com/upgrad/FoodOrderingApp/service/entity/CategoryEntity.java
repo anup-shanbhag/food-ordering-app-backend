@@ -19,8 +19,8 @@ import java.util.Set;
 public class CategoryEntity implements Serializable, Comparable<CategoryEntity> {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categoryIdGenerator")
-    @SequenceGenerator(name = "categoryIdGenerator", sequenceName = "category_id_seq")
+    @GeneratedValue(generator = "categoryIdGenerator")
+    @SequenceGenerator(name = "categoryIdGenerator",sequenceName = "category_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
