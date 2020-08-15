@@ -198,7 +198,15 @@ public class RestaurantController {
 
             restaurantList.add(restaurant);
         }
-
+        restaurantList = restaurantList
+                .stream()
+                .sorted(Comparator.comparing(RestaurantList::getRestaurantName, new Comparator<String>() {
+                    @Override
+                    public int compare(String restaurantName1, String restaurantName2) {
+                        return restaurantName1.compareToIgnoreCase(restaurantName2);
+                    }
+                }))
+                .collect(Collectors.toList());
         RestaurantListResponse restaurantListResponse = new RestaurantListResponse();
         restaurantListResponse.setRestaurants(restaurantList);
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
