@@ -105,8 +105,11 @@ public class AddressService {
             if (address == null) { // Throw error if address not found matching addressId
                 throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
             }
-
-            if (!address.getCustomers().getUuid().equals(customerEntity.getUuid())) { // Throw error if address doesn't belong to logged in customer
+            AddressEntity customerAddress = customerEntity.getAddresses().stream()
+                    .filter(addressEntity -> addressEntity.getUuid().equals(address.getUuid()))
+                    .findFirst()
+                    .orElse(null);
+            if (customerAddress == null) { // Throw error if address doesn't belong to logged in customer
                 throw new AuthorizationFailedException(ATHR_004.getCode(), ATHR_004.getDefaultMessage());
             }
             return address;
