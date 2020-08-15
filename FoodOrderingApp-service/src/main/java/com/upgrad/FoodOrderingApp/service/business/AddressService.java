@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.business;
 
+import com.upgrad.FoodOrderingApp.service.common.AppConstants;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
@@ -16,9 +17,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
@@ -65,8 +68,10 @@ public class AddressService {
     public List<AddressEntity> getAllAddress(CustomerEntity customerEntity) {
 
         // Retrieve list of customer addresses from database
-        List<AddressEntity> addresses = customerEntity.getAddresses();
-        Collections.sort(addresses);
+        List<AddressEntity> addresses = customerEntity.getAddresses()
+                .stream().filter(address -> address.getActive() == AppConstants.ONE_1)
+                .sorted(Comparator.comparing(AddressEntity::getId,Comparator.reverseOrder()))
+                .collect(Collectors.toList());
 
         return addresses;
     }
@@ -100,8 +105,11 @@ public class AddressService {
             if (address == null) { // Throw error if address not found matching addressId
                 throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
             }
-
-            if (!address.getCustomers().getUuid().equals(customerEntity.getUuid())) { // Throw error if address doesn't belong to logged in customer
+            AddressEntity customerAddress = customerEntity.getAddresses().stream()
+                    .filter(addressEntity -> addressEntity.getUuid().equals(address.getUuid()))
+                    .findFirst()
+                    .orElse(null);
+            if (customerAddress == null) { // Throw error if address doesn't belong to logged in customer
                 throw new AuthorizationFailedException(ATHR_004.getCode(), ATHR_004.getDefaultMessage());
             }
             return address;

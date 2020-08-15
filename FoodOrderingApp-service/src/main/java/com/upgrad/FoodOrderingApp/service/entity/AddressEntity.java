@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "address")
 @NamedQueries(
-        @NamedQuery(name = "fetchAddressById", query = "SELECT a FROM AddressEntity a WHERE a.uuid=:addressId")
+        @NamedQuery(name = "fetchAddressById", query = "SELECT a FROM AddressEntity a WHERE a.uuid=:addressId and a.active = 1")
 )
 public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id

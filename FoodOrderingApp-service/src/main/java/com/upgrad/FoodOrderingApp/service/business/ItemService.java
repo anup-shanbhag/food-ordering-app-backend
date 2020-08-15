@@ -8,10 +8,13 @@ import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.INF_001;
 
 @Service
 public class ItemService {
@@ -68,8 +71,14 @@ public class ItemService {
      * @param uuid item UUID to be retrieved from database
      * @return ItemEntity of matching item uuid
      */
-    public ItemEntity getItemById(String uuid) {
-        return itemDao.getItemById(uuid);
+    public ItemEntity getItemById(String uuid) throws ItemNotFoundException {
+        ItemEntity itemEntity = itemDao.getItemById(uuid);
+        if(itemEntity == null) {
+            throw new ItemNotFoundException(INF_001.getCode(), INF_001.getDefaultMessage());
+        }
+        else{
+            return itemEntity;
+        }
     }
 
     /**

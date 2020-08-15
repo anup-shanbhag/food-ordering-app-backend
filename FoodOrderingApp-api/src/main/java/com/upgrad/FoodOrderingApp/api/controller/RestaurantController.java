@@ -23,10 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin
@@ -200,7 +198,15 @@ public class RestaurantController {
 
             restaurantList.add(restaurant);
         }
-
+        restaurantList = restaurantList
+                .stream()
+                .sorted(Comparator.comparing(RestaurantList::getRestaurantName, new Comparator<String>() {
+                    @Override
+                    public int compare(String restaurantName1, String restaurantName2) {
+                        return restaurantName1.compareToIgnoreCase(restaurantName2);
+                    }
+                }))
+                .collect(Collectors.toList());
         RestaurantListResponse restaurantListResponse = new RestaurantListResponse();
         restaurantListResponse.setRestaurants(restaurantList);
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
@@ -258,9 +264,27 @@ public class RestaurantController {
                 item.setItemType(ItemList.ItemTypeEnum.fromValue(itemEntity.getType().getValue()));
                 itemListList.add(item);
             }
+            itemListList = itemListList
+                    .stream()
+                    .sorted(Comparator.comparing(ItemList::getItemName, new Comparator<String>() {
+                        @Override
+                        public int compare(String itemName1, String itemName2) {
+                            return itemName1.compareToIgnoreCase(itemName2);
+                        }
+                    }))
+                    .collect(Collectors.toList());
             category.setItemList(itemListList);
             categoryList.add(category);
         }
+        categoryList = categoryList
+                .stream()
+                .sorted(Comparator.comparing(CategoryList::getCategoryName, new Comparator<String>() {
+                    @Override
+                    public int compare(String categoryName1, String categoryName2) {
+                        return categoryName1.compareToIgnoreCase(categoryName2);
+                    }
+                }))
+                .collect(Collectors.toList());
         restaurant.categories(categoryList);
 
         return new ResponseEntity<RestaurantDetailsResponse>(restaurant, HttpStatus.OK);
