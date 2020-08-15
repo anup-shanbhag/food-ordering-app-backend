@@ -40,7 +40,8 @@ public enum GenericErrorCode implements ErrorCode {
     RNF_002("RNF-002","Restaurant id field should not be empty"),
     RNF_001("RNF-001","No restaurant by this id"),
     IRE_001("IRE-001","Restaurant should be in the range of 1 to 5"),
-    PNF_002("PNF-002","No payment method found by this id");
+    PNF_002("PNF-002","No payment method found by this id"),
+    INF_001("INF-001","No item by this id exist");
 
 
     private static final Map<String, GenericErrorCode> LOOKUP = new HashMap<String, GenericErrorCode>();

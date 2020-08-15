@@ -92,7 +92,6 @@ public class OrderEntity implements Serializable {
     private RestaurantEntity restaurant;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToStringExclude
     @HashCodeExclude

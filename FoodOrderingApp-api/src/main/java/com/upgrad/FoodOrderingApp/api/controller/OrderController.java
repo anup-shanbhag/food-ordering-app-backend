@@ -148,7 +148,7 @@ public class OrderController {
         produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") final String authorization,
                                                        @RequestBody(required = false) final SaveOrderRequest saveOrderRequest)
-        throws AuthorizationFailedException, AddressNotFoundException, RestaurantNotFoundException, CouponNotFoundException, PaymentMethodNotFoundException {
+            throws AuthorizationFailedException, AddressNotFoundException, RestaurantNotFoundException, CouponNotFoundException, PaymentMethodNotFoundException, ItemNotFoundException {
         final String accessToken = AppUtils.getBearerAuthToken(authorization);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         OrderEntity orderEntity = new OrderEntity();
