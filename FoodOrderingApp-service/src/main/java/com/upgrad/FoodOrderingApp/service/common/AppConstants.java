@@ -15,6 +15,9 @@ public class AppConstants {
     // Regular Expression to check  if basic auth token is valid
     public static final String REG_EXP_BASIC_AUTH = "^.+[\\:]{1,1}.+$";
 
+    // Number 1
+    public static final Integer ONE_1 = 1;
+
     //Number '7'
     public static final Integer SEVEN_7 = 7;
     //Number '8'

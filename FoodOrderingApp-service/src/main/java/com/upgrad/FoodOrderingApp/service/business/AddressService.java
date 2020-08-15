@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.business;
 
+import com.upgrad.FoodOrderingApp.service.common.AppConstants;
 import com.upgrad.FoodOrderingApp.service.common.UnexpectedException;
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
@@ -16,9 +17,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
@@ -65,8 +68,10 @@ public class AddressService {
     public List<AddressEntity> getAllAddress(CustomerEntity customerEntity) {
 
         // Retrieve list of customer addresses from database
-        List<AddressEntity> addresses = customerEntity.getAddresses();
-        Collections.sort(addresses);
+        List<AddressEntity> addresses = customerEntity.getAddresses()
+                .stream().filter(address -> address.getActive() == AppConstants.ONE_1)
+                .sorted(Comparator.comparing(AddressEntity::getId,Comparator.reverseOrder()))
+                .collect(Collectors.toList());
 
         return addresses;
     }
