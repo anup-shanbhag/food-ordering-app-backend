@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "category")
 @NamedQueries({
-        @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c"),
+        @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c order by c.categoryName"),
         @NamedQuery(name = "Category.fetchCategoryItem", query = "SELECT ci FROM CategoryEntity ci WHERE ci.uuid=:categoryId")
 })
 public class CategoryEntity implements Serializable, Comparable<CategoryEntity> {
