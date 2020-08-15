@@ -200,12 +200,7 @@ public class RestaurantController {
         }
         restaurantList = restaurantList
                 .stream()
-                .sorted(Comparator.comparing(RestaurantList::getRestaurantName, new Comparator<String>() {
-                    @Override
-                    public int compare(String restaurantName1, String restaurantName2) {
-                        return restaurantName1.compareToIgnoreCase(restaurantName2);
-                    }
-                }))
+                .sorted(Comparator.comparing(RestaurantList::getRestaurantName, String.CASE_INSENSITIVE_ORDER))
                 .collect(Collectors.toList());
         RestaurantListResponse restaurantListResponse = new RestaurantListResponse();
         restaurantListResponse.setRestaurants(restaurantList);
@@ -266,24 +261,14 @@ public class RestaurantController {
             }
             itemListList = itemListList
                     .stream()
-                    .sorted(Comparator.comparing(ItemList::getItemName, new Comparator<String>() {
-                        @Override
-                        public int compare(String itemName1, String itemName2) {
-                            return itemName1.compareToIgnoreCase(itemName2);
-                        }
-                    }))
+                    .sorted(Comparator.comparing(ItemList::getItemName, String.CASE_INSENSITIVE_ORDER))
                     .collect(Collectors.toList());
             category.setItemList(itemListList);
             categoryList.add(category);
         }
         categoryList = categoryList
                 .stream()
-                .sorted(Comparator.comparing(CategoryList::getCategoryName, new Comparator<String>() {
-                    @Override
-                    public int compare(String categoryName1, String categoryName2) {
-                        return categoryName1.compareToIgnoreCase(categoryName2);
-                    }
-                }))
+                .sorted(Comparator.comparing(CategoryList::getCategoryName, String.CASE_INSENSITIVE_ORDER))
                 .collect(Collectors.toList());
         restaurant.categories(categoryList);
 
