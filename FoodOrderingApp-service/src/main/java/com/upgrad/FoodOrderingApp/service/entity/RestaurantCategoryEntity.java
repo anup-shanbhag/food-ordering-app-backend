@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class RestaurantCategoryEntity implements Serializable {
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "restaurantCategoryIdGenerator")
-    @SequenceGenerator(name="restaurantCategoryIdGenerator", sequenceName = "restaurant_category_id_seq")
+    @GeneratedValue(generator = "restaurantCategoryIdGenerator")
+    @SequenceGenerator(name="restaurantCategoryIdGenerator", sequenceName = "restaurant_category_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private int id;

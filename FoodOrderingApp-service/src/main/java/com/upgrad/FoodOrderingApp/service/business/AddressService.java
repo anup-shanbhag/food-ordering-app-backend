@@ -151,10 +151,10 @@ public class AddressService {
      * @return validation true/false
      */
     private boolean addressFieldsEmpty(AddressEntity address) {
-        return address.getFlatBuilNo().isEmpty() ||
-                address.getLocality().isEmpty() ||
-                address.getCity().isEmpty() ||
-                address.getPincode().isEmpty();
+        return (address.getFlatBuilNo() == null || address.getLocality() == null ||
+                address.getCity() == null || address.getPincode() == null ||
+                address.getFlatBuilNo().isEmpty() || address.getLocality().isEmpty() ||
+                address.getCity().isEmpty() || address.getPincode().isEmpty());
     }
 
     /**

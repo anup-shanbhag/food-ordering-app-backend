@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class OrderItemEntity implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderItemIdGenerator")
-    @SequenceGenerator(name = "orderItemIdGenerator", sequenceName = "order_item_id_seq")
+    @GeneratedValue(generator = "orderItemIdGenerator")
+    @SequenceGenerator(name = "orderItemIdGenerator", sequenceName = "order_item_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
