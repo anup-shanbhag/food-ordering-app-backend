@@ -28,5 +28,9 @@ public class AppConstants {
     public static final String COLON = ":";
     // Text 'access-token'
     public static final String HTTP_ACCESS_TOKEN_HEADER = "access-token";
+    // Text 'Basic '
+    public static final String PREFIX_BASIC = "Basic ";
+    // Text 'Bearer '
+    public static final String PREFIX_BEARER = "Bearer ";
 
 }

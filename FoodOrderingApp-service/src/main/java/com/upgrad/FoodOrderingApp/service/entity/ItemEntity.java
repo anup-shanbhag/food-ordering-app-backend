@@ -20,7 +20,7 @@ import java.util.Set;
 
 })
 
-public class ItemEntity implements Serializable,Comparable{
+public class ItemEntity implements Serializable{
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "itemIdGenerator")
@@ -48,11 +48,14 @@ public class ItemEntity implements Serializable,Comparable{
     @NotNull
     private ItemType type;
 
-    @OneToMany(mappedBy = "itemEntity", cascade= CascadeType.ALL, fetch= FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "category_item",
+            joinColumns = {@JoinColumn(name = "item_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
     @ToStringExclude
     @HashCodeExclude
     @EqualsExclude
-    private List<CategoryItemEntity> categoryItemEntityList;
+    private Set<CategoryEntity> categories = new HashSet<CategoryEntity>();
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @NotNull
@@ -102,12 +105,12 @@ public class ItemEntity implements Serializable,Comparable{
         this.type = type;
     }
 
-    public List<CategoryItemEntity> getCategoryItemEntityList() {
-        return categoryItemEntityList;
+    public Set<CategoryEntity> getCategories() {
+        return categories;
     }
 
-    public void setCategoryItemEntityList(List<CategoryItemEntity> categoryItemEntityList) {
-        this.categoryItemEntityList = categoryItemEntityList;
+    public void setCategories(Set<CategoryEntity> categories) {
+        this.categories = categories;
     }
 
     public Set<OrderItemEntity> getOrders() {
@@ -133,8 +136,4 @@ public class ItemEntity implements Serializable,Comparable{
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
-    @Override
-    public int compareTo(Object o) {
-        return 0;
-    }
 }

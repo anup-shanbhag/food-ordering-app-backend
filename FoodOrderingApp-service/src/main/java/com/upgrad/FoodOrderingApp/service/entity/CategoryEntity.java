@@ -34,7 +34,7 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
     @Size(max = 30)
     private String categoryName;
 
-    @OneToMany(mappedBy = "id")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     private List<ItemEntity> items;
 
     public Integer getId() {

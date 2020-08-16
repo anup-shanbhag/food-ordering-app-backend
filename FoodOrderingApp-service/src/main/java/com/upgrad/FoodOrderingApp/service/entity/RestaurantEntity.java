@@ -148,11 +148,11 @@ public class RestaurantEntity implements Serializable {
         this.restaurantCategoryEntitySet = restaurantCategoryEntitySet;
     }
 
-    public Set<ItemEntity> getItem() {
+    public Set<ItemEntity> getItems() {
         return items;
     }
 
-    public void setItem(Set<ItemEntity> item) {
+    public void setItems(Set<ItemEntity> item) {
         this.items = item;
     }
 

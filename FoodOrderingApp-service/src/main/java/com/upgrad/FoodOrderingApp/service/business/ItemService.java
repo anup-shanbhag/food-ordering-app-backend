@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.INF_001;
 
@@ -41,29 +42,14 @@ public class ItemService {
         //get Restaurant
         RestaurantEntity restaurant = restaurantDao.getRestaurantByID(restaurantUuid);
         //get items in restaurant
-        Set<ItemEntity> restaurantItemEntityList = restaurant.getItem();
+        Set<ItemEntity> restaurantItems = restaurant.getItems();
 
-        //get the category
-        CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-        List<ItemEntity> categoryItemEntityList = itemDao.getItemsByCategory(category);
-        List<ItemEntity> itemEntityList = new ArrayList<>();
-
-        // Categorize the restaurant items into the category under consideration
-        for (ItemEntity restaurantItem : restaurantItemEntityList) {
-            for (ItemEntity categoryItem : categoryItemEntityList) {
-                if (restaurantItem.getUuid().equals(categoryItem.getUuid())) {
-                    itemEntityList.add(restaurantItem);
-                }
-            }
-        }
-        //sort the items by name , case insensitive
-        itemEntityList.sort(Comparator.comparing(ItemEntity::getItemName, String.CASE_INSENSITIVE_ORDER));
-        return itemEntityList;
-    }
-
-    public List<ItemEntity> getItemsByCategory(String categoryUuid) {
-        CategoryEntity category = categoryDao.getCategoryById(categoryUuid);
-        return itemDao.getItemsByCategory(category);
+        List<ItemEntity> filteredRestaurantItems = restaurantItems.stream().filter( restaurantItem ->
+                restaurantItem.getCategories().stream()
+                        .anyMatch( categoryEntity -> categoryEntity.getUuid().equals(categoryUuid)))
+                .sorted(Comparator.comparing(ItemEntity::getItemName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
+        return filteredRestaurantItems;
     }
 
     /**
