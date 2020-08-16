@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.*;
 
 import java.util.List;
+
+import static com.upgrad.FoodOrderingApp.service.common.GenericErrorCode.PNF_002;
 
 @Service
 public class PaymentService {
@@ -19,6 +20,7 @@ public class PaymentService {
 
     /**
      * Method returns all available payment methods in the system
+     *
      * @return List of all available payment methods
      */
     @Transactional(propagation = Propagation.REQUIRED)
@@ -29,10 +31,9 @@ public class PaymentService {
     @Transactional(propagation = Propagation.REQUIRED)
     public PaymentEntity getPaymentByUUID(String paymentID) throws PaymentMethodNotFoundException {
         PaymentEntity paymentEntity = paymentDao.getPaymentByUUID(paymentID);
-        if(paymentEntity == null){
-            throw new PaymentMethodNotFoundException(PNF_002.getCode(),PNF_002.getDefaultMessage());
-        }
-        else
+        if (paymentEntity == null) {
+            throw new PaymentMethodNotFoundException(PNF_002.getCode(), PNF_002.getDefaultMessage());
+        } else
             return paymentEntity;
     }
 }

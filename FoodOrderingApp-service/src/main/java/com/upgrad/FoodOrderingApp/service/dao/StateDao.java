@@ -20,7 +20,7 @@ public class StateDao {
     public StateEntity findStateByUUID(final String uuid) {
         try {
             return entityManager.createNamedQuery("fetchStateByUUID", StateEntity.class)
-                    .setParameter("uuid", uuid).getSingleResult();
+                .setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

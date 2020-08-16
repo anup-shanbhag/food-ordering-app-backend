@@ -6,21 +6,19 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "category")
 @NamedQueries({
-        @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c order by c.categoryName"),
-        @NamedQuery(name = "Category.fetchCategoryItem", query = "SELECT ci FROM CategoryEntity ci WHERE ci.uuid=:categoryId")
+    @NamedQuery(name = "Category.fetchAllCategories", query = "SELECT c FROM CategoryEntity c order by c.categoryName"),
+    @NamedQuery(name = "Category.fetchCategoryItem", query = "SELECT ci FROM CategoryEntity ci WHERE ci.uuid=:categoryId")
 })
 public class CategoryEntity implements Serializable, Comparable<CategoryEntity> {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "categoryIdGenerator")
-    @SequenceGenerator(name = "categoryIdGenerator",sequenceName = "category_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "categoryIdGenerator", sequenceName = "category_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -71,12 +69,12 @@ public class CategoryEntity implements Serializable, Comparable<CategoryEntity> 
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

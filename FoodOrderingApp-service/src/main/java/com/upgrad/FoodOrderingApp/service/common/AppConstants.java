@@ -1,7 +1,5 @@
 package com.upgrad.FoodOrderingApp.service.common;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class AppConstants {
 
     // Regular Expression to check if password has at least 1 uppercase letter

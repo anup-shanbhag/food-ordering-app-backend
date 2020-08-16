@@ -9,19 +9,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "orders")
 @NamedQueries({
-        @NamedQuery(name = "Orders.ByCustomer", query = "SELECT O FROM OrderEntity O WHERE O.customer.uuid = :customerId ORDER BY O.date DESC"),
-        @NamedQuery(name = "fetchOrdersByRestaurant", query = "SELECT o FROM OrderEntity o where o.restaurant =: restaurant")
+    @NamedQuery(name = "Orders.ByCustomer", query = "SELECT O FROM OrderEntity O WHERE O.customer.uuid = :customerId ORDER BY O.date DESC"),
+    @NamedQuery(name = "fetchOrdersByRestaurant", query = "SELECT o FROM OrderEntity o where o.restaurant =: restaurant")
 })
 public class OrderEntity implements Serializable {
     @Id
@@ -42,7 +40,7 @@ public class OrderEntity implements Serializable {
     private Double bill;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "coupon_id",referencedColumnName = "id")
+    @JoinColumn(name = "coupon_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToStringExclude
     @HashCodeExclude
@@ -57,7 +55,7 @@ public class OrderEntity implements Serializable {
     private LocalDateTime date;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payment_id",referencedColumnName = "id")
+    @JoinColumn(name = "payment_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToStringExclude
     @HashCodeExclude
@@ -65,7 +63,7 @@ public class OrderEntity implements Serializable {
     private PaymentEntity payment;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id",referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     @ToStringExclude
@@ -74,7 +72,7 @@ public class OrderEntity implements Serializable {
     private CustomerEntity customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id",referencedColumnName = "id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     @ToStringExclude
@@ -83,7 +81,7 @@ public class OrderEntity implements Serializable {
     private AddressEntity address;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     @ToStringExclude
@@ -98,7 +96,7 @@ public class OrderEntity implements Serializable {
     @EqualsExclude
     Set<OrderItemEntity> items = new HashSet<OrderItemEntity>();
 
-    public OrderEntity(){
+    public OrderEntity() {
     }
 
     public OrderEntity(String uuid, double bill, CouponEntity coupon, double discount, Date date, PaymentEntity payment, CustomerEntity customer, AddressEntity address, RestaurantEntity restaurant) {
@@ -203,12 +201,12 @@ public class OrderEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

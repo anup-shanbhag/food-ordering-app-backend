@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "payment")
 @NamedQueries({
-        @NamedQuery(name = "PaymentModes.All", query = "SELECT P FROM PaymentEntity P"),
-        @NamedQuery(name = "PaymentModes.getById", query = "SELECT P FROM PaymentEntity P Where P.uuid=:uuid")
+    @NamedQuery(name = "PaymentModes.All", query = "SELECT P FROM PaymentEntity P"),
+    @NamedQuery(name = "PaymentModes.getById", query = "SELECT P FROM PaymentEntity P Where P.uuid=:uuid")
 })
 public class PaymentEntity implements Serializable {
     @Id
@@ -31,7 +31,7 @@ public class PaymentEntity implements Serializable {
     @Size(max = 255)
     private String paymentName;
 
-    public PaymentEntity(){
+    public PaymentEntity() {
 
     }
 
@@ -66,12 +66,12 @@ public class PaymentEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

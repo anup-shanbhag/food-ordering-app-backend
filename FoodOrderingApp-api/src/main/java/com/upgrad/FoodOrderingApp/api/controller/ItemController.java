@@ -27,16 +27,17 @@ public class ItemController {
 
     /**
      * Method takes restaurant_id from customer, returns top 5 popular items
+     *
      * @param restaurantId restaurant id as request path var
      * @return ResponseEntity with list of items
      * @throws RestaurantNotFoundException on invalid restaurantId
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET,
-            path = "/item/restaurant/{restaurant_id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        path = "/item/restaurant/{restaurant_id}",
+        produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItemListResponse> getItemsByPopularity(@PathVariable("restaurant_id") final String restaurantId)
-            throws RestaurantNotFoundException {
+        throws RestaurantNotFoundException {
 
         // Retrieve RestaurantEntity matching restaurantId from database
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurantId);
@@ -47,18 +48,17 @@ public class ItemController {
         ItemListResponse itemListResponse = new ItemListResponse();
 
         // Map retrieved ItemEntity to Response Object List
-        int count =0;
-        for (ItemEntity itemEntity : itemList){
-            if(count<5){
+        int count = 0;
+        for (ItemEntity itemEntity : itemList) {
+            if (count < 5) {
                 ItemList items = new ItemList()
-                        .id(UUID.fromString(itemEntity.getUuid()))
-                        .itemName(itemEntity.getItemName())
-                        .price(itemEntity.getPrice())
-                        .itemType(ItemList.ItemTypeEnum.fromValue(itemEntity.getType().getValue()));
+                    .id(UUID.fromString(itemEntity.getUuid()))
+                    .itemName(itemEntity.getItemName())
+                    .price(itemEntity.getPrice())
+                    .itemType(ItemList.ItemTypeEnum.fromValue(itemEntity.getType().getValue()));
                 itemListResponse.add(items);
                 count = count + 1;
-            }
-            else{
+            } else {
                 break;
             }
         }

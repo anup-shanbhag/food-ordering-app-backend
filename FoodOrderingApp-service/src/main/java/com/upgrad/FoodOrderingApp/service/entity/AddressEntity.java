@@ -13,13 +13,13 @@ import java.util.List;
 @Entity
 @Table(name = "address")
 @NamedQueries(
-        @NamedQuery(name = "fetchAddressById", query = "SELECT a FROM AddressEntity a WHERE a.uuid=:addressId and a.active = 1")
+    @NamedQuery(name = "fetchAddressById", query = "SELECT a FROM AddressEntity a WHERE a.uuid=:addressId and a.active = 1")
 )
 public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "addressIdGenerator")
-    @SequenceGenerator(name = "addressIdGenerator",sequenceName = "address_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "addressIdGenerator", sequenceName = "address_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -49,21 +49,20 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
     @JoinColumn(name = "state_id", referencedColumnName = "id")
     private StateEntity state;
 
-    @Column(name="active")
+    @Column(name = "active")
     private Integer active;
 
     @ManyToOne
     @JoinTable(name = "customer_address",
-            joinColumns = {@JoinColumn(name = "address_id")},
-            inverseJoinColumns = {@JoinColumn(name = "customer_id")})
+        joinColumns = {@JoinColumn(name = "address_id")},
+        inverseJoinColumns = {@JoinColumn(name = "customer_id")})
     private CustomerEntity customer;
 
-    @OneToMany(mappedBy = "address", fetch= FetchType.LAZY)
+    @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
     private List<OrderEntity> orders = new ArrayList<>();
 
 
-
-    public AddressEntity(String uuid,  String flatBuilNo, String locality,  String city,  String pincode, StateEntity state) {
+    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state) {
         this.uuid = uuid;
         this.flatBuilNo = flatBuilNo;
         this.locality = locality;
@@ -71,7 +70,8 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
         this.pincode = pincode;
         this.state = state;
     }
-    public AddressEntity(){
+
+    public AddressEntity() {
 
     }
 
@@ -162,12 +162,12 @@ public class AddressEntity implements Serializable, Comparable<AddressEntity> {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

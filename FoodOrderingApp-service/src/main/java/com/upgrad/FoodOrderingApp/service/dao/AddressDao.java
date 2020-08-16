@@ -15,6 +15,7 @@ public class AddressDao {
 
     /**
      * Method takes a AddressEntity and stores it in the database
+     *
      * @param address AddressEntity to persist
      * @return persisted AddressEntity
      */
@@ -25,13 +26,14 @@ public class AddressDao {
 
     /**
      * Method takes a addressId and returns the matching AddressEntity
+     *
      * @param addressId address uuid
      * @return AddressEntity
      */
     public AddressEntity getAddressByAddressId(final String addressId) {
         try {
             return entityManager.createNamedQuery("fetchAddressById", AddressEntity.class)
-                    .setParameter("addressId", addressId).getSingleResult();
+                .setParameter("addressId", addressId).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -39,6 +41,7 @@ public class AddressDao {
 
     /**
      * Method takes a AddressEntity and deletes the matching AddressEntity
+     *
      * @param address AddressEntity
      * @return AddressEntity
      */
@@ -49,6 +52,7 @@ public class AddressDao {
 
     /**
      * Method takes a AddressEntity and soft deletes the matching AddressEntity
+     *
      * @param address AddressEntity
      * @return AddressEntity
      */

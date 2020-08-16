@@ -10,13 +10,11 @@ import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
-import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,8 +34,9 @@ public class AddressService {
 
     /**
      * Method takes AddressEntity/ StateEntity and stores it on the database
+     *
      * @param address New AddressEntity
-     * @param state is StateEntity of address
+     * @param state   is StateEntity of address
      * @return Saved Address Entity
      * @throws SaveAddressException on invalid flat/locality/city/pincode on the input address entity
      */
@@ -54,13 +53,14 @@ public class AddressService {
         address.setState(state);
         try { // Store address on the database
             return addressDao.saveAddress(address);
-        } catch (Exception dataIntegrityViolationException){
+        } catch (Exception dataIntegrityViolationException) {
             throw new UnexpectedException(GEN_001, dataIntegrityViolationException);
         }
     }
 
     /**
      * Method takes CustomerEntity and returns AddressEntity List
+     *
      * @param customerEntity Customer entity
      * @return AddressEntity List of the customer
      */
@@ -69,15 +69,16 @@ public class AddressService {
 
         // Retrieve list of customer addresses from database
         List<AddressEntity> addresses = customerEntity.getAddresses()
-                .stream().filter(address -> address.getActive() == AppConstants.ONE_1)
-                .sorted(Comparator.comparing(AddressEntity::getId,Comparator.reverseOrder()))
-                .collect(Collectors.toList());
+            .stream().filter(address -> address.getActive() == AppConstants.ONE_1)
+            .sorted(Comparator.comparing(AddressEntity::getId, Comparator.reverseOrder()))
+            .collect(Collectors.toList());
 
         return addresses;
     }
 
     /**
      * Method takes no input and returns StateEntity List
+     *
      * @return AddressEntity List of the States
      */
     @Transactional(propagation = Propagation.REQUIRED)
@@ -88,15 +89,16 @@ public class AddressService {
 
     /**
      * Method takes AddressId/ CustomerEntity and return AddressEntity from the database
-     * @param addressId Address id to be deleted
+     *
+     * @param addressId      Address id to be deleted
      * @param customerEntity is customer details
      * @return AddressEntity of addressId
-     * @throws AddressNotFoundException on invalid address id
+     * @throws AddressNotFoundException     on invalid address id
      * @throws AuthorizationFailedException on invalid customer access-token
-     * @throws UnexpectedException on any other errors
+     * @throws UnexpectedException          on any other errors
      */
     public AddressEntity getAddressByUUID(String addressId, CustomerEntity customerEntity)
-            throws AddressNotFoundException, AuthorizationFailedException, UnexpectedException {
+        throws AddressNotFoundException, AuthorizationFailedException, UnexpectedException {
         try { // Throw error if addressId is null
             if (addressId == null) {
                 throw new AddressNotFoundException(ANF_005.getCode(), ANF_005.getDefaultMessage());
@@ -106,20 +108,21 @@ public class AddressService {
                 throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
             }
             AddressEntity customerAddress = customerEntity.getAddresses().stream()
-                    .filter(addressEntity -> addressEntity.getUuid().equals(address.getUuid()))
-                    .findFirst()
-                    .orElse(null);
+                .filter(addressEntity -> addressEntity.getUuid().equals(address.getUuid()))
+                .findFirst()
+                .orElse(null);
             if (customerAddress == null) { // Throw error if address doesn't belong to logged in customer
                 throw new AuthorizationFailedException(ATHR_004.getCode(), ATHR_004.getDefaultMessage());
             }
             return address;
-        }catch (NullPointerException npe){ // Throw error if unexpected error
+        } catch (NullPointerException npe) { // Throw error if unexpected error
             throw new UnexpectedException(GEN_001, npe);
         }
     }
 
     /**
      * Method takes AddressEntity and delete AddressEntity from the database
+     *
      * @param address is AddressEntity to be deleted
      * @return AddressEntity of the deleted address
      */
@@ -130,6 +133,7 @@ public class AddressService {
 
     /**
      * Method takes AddressEntity and soft delete AddressEntity from the database
+     *
      * @param address is AddressEntity to be soft deleted
      * @return AddressEntity of the soft deleted address
      */
@@ -140,6 +144,7 @@ public class AddressService {
 
     /**
      * Method takes stateUUID and return StateEntity from the database
+     *
      * @param stateUUID State id to retrieved
      * @return StateEntity of stateUUID
      * @throws AddressNotFoundException on invalid stateUUID
@@ -155,18 +160,20 @@ public class AddressService {
 
     /**
      * Method takes addressEntity and validates for mandatory fields
+     *
      * @param address AddressEntity to be validated
      * @return validation true/false
      */
     private boolean addressFieldsEmpty(AddressEntity address) {
         return (address.getFlatBuilNo() == null || address.getLocality() == null ||
-                address.getCity() == null || address.getPincode() == null ||
-                address.getFlatBuilNo().isEmpty() || address.getLocality().isEmpty() ||
-                address.getCity().isEmpty() || address.getPincode().isEmpty());
+            address.getCity() == null || address.getPincode() == null ||
+            address.getFlatBuilNo().isEmpty() || address.getLocality().isEmpty() ||
+            address.getCity().isEmpty() || address.getPincode().isEmpty());
     }
 
     /**
      * Method takes pincode and validates using regex
+     *
      * @param pincode regex to be validated
      * @return validation true/false
      */

@@ -10,14 +10,14 @@ import java.io.Serializable;
 @Entity
 @Table(name = "coupon")
 @NamedQueries({
-        @NamedQuery(name = "Coupon.ByName", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :couponName"),
-        @NamedQuery(name = "Coupon.ByUuid", query = "SELECT C FROM CouponEntity C WHERE C.uuid = :uuid")
+    @NamedQuery(name = "Coupon.ByName", query = "SELECT C FROM CouponEntity C WHERE C.couponName = :couponName"),
+    @NamedQuery(name = "Coupon.ByUuid", query = "SELECT C FROM CouponEntity C WHERE C.uuid = :uuid")
 })
 public class CouponEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "couponIdGenerator")
-    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq",initialValue = 1,allocationSize = 1)
+    @SequenceGenerator(name = "couponIdGenerator", sequenceName = "coupon_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -35,14 +35,14 @@ public class CouponEntity implements Serializable {
     @NotNull
     private Integer percent;
 
-    public CouponEntity(){
+    public CouponEntity() {
 
     }
 
-    public CouponEntity(final String uuid, final String couponName, Integer percent){
-        this.uuid=uuid;
-        this.couponName=couponName;
-        this.percent=percent;
+    public CouponEntity(final String uuid, final String couponName, Integer percent) {
+        this.uuid = uuid;
+        this.couponName = couponName;
+        this.percent = percent;
     }
 
     public Integer getId() {
@@ -79,12 +79,12 @@ public class CouponEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

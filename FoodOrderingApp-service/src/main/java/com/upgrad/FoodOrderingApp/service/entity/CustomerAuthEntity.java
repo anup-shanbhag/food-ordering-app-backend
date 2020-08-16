@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "customer_auth")
 @NamedQueries({
-        @NamedQuery(name = "Customer.ByAuthToken", query = "SELECT C FROM CustomerAuthEntity C WHERE C.accessToken = :accessToken")
+    @NamedQuery(name = "Customer.ByAuthToken", query = "SELECT C FROM CustomerAuthEntity C WHERE C.accessToken = :accessToken")
 })
 public class CustomerAuthEntity implements Serializable {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "customerAuthIdGenerator")
-    @SequenceGenerator(name = "customerAuthIdGenerator",sequenceName = "customer_auth_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "customerAuthIdGenerator", sequenceName = "customer_auth_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -31,7 +31,7 @@ public class CustomerAuthEntity implements Serializable {
     private String uuid;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id",referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToStringExclude
@@ -112,12 +112,12 @@ public class CustomerAuthEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

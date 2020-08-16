@@ -14,35 +14,35 @@ public class RestaurantDao {
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<RestaurantEntity> restaurantsByRating(){
+    public List<RestaurantEntity> restaurantsByRating() {
         return entityManager.createNamedQuery("Restaurants.fetchAll").getResultList();
     }
 
-    public List<RestaurantEntity> restaurantsByName(String name){
-        return entityManager.createNamedQuery("Restaurants.getByName").setParameter("name","%"+name.toLowerCase()+"%").getResultList();
+    public List<RestaurantEntity> restaurantsByName(String name) {
+        return entityManager.createNamedQuery("Restaurants.getByName").setParameter("name", "%" + name.toLowerCase() + "%").getResultList();
     }
 
-    public RestaurantEntity getRestaurantByID(String restaurantId){
+    public RestaurantEntity getRestaurantByID(String restaurantId) {
         try {
             return entityManager.createNamedQuery("Restaurants.getById", RestaurantEntity.class).setParameter("id", restaurantId).getSingleResult();
-        }catch (NoResultException nre){
+        } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public List<RestaurantEntity> restaurantByCategory(CategoryEntity categoryEntity){
+    public List<RestaurantEntity> restaurantByCategory(CategoryEntity categoryEntity) {
         try {
-            return entityManager.createNamedQuery("RestaurantCategoryEntity.getRestaurantByCategory",RestaurantEntity.class).setParameter("category", categoryEntity).getResultList();
-        }catch (NoResultException nre){
+            return entityManager.createNamedQuery("RestaurantCategoryEntity.getRestaurantByCategory", RestaurantEntity.class).setParameter("category", categoryEntity).getResultList();
+        } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurant){
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurant) {
         try {
-             entityManager.merge(restaurant);
-             return  restaurant;
-        }catch (NoResultException nre){
+            entityManager.merge(restaurant);
+            return restaurant;
+        } catch (NoResultException nre) {
             return null;
         }
     }

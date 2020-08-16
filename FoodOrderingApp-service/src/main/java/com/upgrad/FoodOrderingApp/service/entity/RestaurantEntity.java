@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,7 +54,7 @@ public class RestaurantEntity implements Serializable {
     private Integer numberOfCustomersRated;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id",referencedColumnName = "id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     @ToStringExclude
@@ -72,8 +71,8 @@ public class RestaurantEntity implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "restaurant_item",
-            joinColumns = {@JoinColumn(name = "restaurant_id")},
-            inverseJoinColumns = {@JoinColumn(name = "item_id")})
+        joinColumns = {@JoinColumn(name = "restaurant_id")},
+        inverseJoinColumns = {@JoinColumn(name = "item_id")})
     private Set<ItemEntity> items = new HashSet<ItemEntity>();
 
     public Integer getId() {
@@ -158,12 +157,12 @@ public class RestaurantEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

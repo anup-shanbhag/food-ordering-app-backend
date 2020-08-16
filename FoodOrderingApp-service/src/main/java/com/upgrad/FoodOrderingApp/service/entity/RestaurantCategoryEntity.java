@@ -8,16 +8,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="restaurant_category")
+@Table(name = "restaurant_category")
 @NamedQueries({
-    @NamedQuery(name="RestaurantCategoryEntity.getCategoryByRestaurant",query = "SELECT rc.categoryEntity from RestaurantCategoryEntity rc WHERE rc.restaurantEntity=:restaurant"),
-    @NamedQuery(name="RestaurantCategoryEntity.getRestaurantByCategory",query = "SELECT rc.restaurantEntity from RestaurantCategoryEntity rc WHERE rc.categoryEntity=:category")
+    @NamedQuery(name = "RestaurantCategoryEntity.getCategoryByRestaurant", query = "SELECT rc.categoryEntity from RestaurantCategoryEntity rc WHERE rc.restaurantEntity=:restaurant"),
+    @NamedQuery(name = "RestaurantCategoryEntity.getRestaurantByCategory", query = "SELECT rc.restaurantEntity from RestaurantCategoryEntity rc WHERE rc.categoryEntity=:category")
 })
 public class RestaurantCategoryEntity implements Serializable {
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(generator = "restaurantCategoryIdGenerator")
-    @SequenceGenerator(name="restaurantCategoryIdGenerator", sequenceName = "restaurant_category_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "restaurantCategoryIdGenerator", sequenceName = "restaurant_category_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private int id;

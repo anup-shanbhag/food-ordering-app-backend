@@ -43,12 +43,12 @@ public class PaymentControllerTest {
         paymentEntity.setPaymentName("samplePaymentName");
 
         when(mockPaymentService.getAllPaymentMethods())
-                .thenReturn(Collections.singletonList(paymentEntity));
+            .thenReturn(Collections.singletonList(paymentEntity));
 
         final String response = mockMvc
-                .perform(get("/payment").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+            .perform(get("/payment").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
         final PaymentListResponse paymentResponses = new ObjectMapper().readValue(response, PaymentListResponse.class);
         assertEquals(paymentResponses.getPaymentMethods().size(), 1);
