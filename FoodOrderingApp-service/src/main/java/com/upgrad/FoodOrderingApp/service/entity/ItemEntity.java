@@ -10,21 +10,20 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "item")
 @NamedQueries({
-    @NamedQuery(name="ItemEntity.getItemById",query = "SELECT i FROM ItemEntity i WHERE i.uuid=:uuid")
+    @NamedQuery(name = "ItemEntity.getItemById", query = "SELECT i FROM ItemEntity i WHERE i.uuid=:uuid")
 
 })
 
-public class ItemEntity implements Serializable{
+public class ItemEntity implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "itemIdGenerator")
-    @SequenceGenerator(name = "itemIdGenerator",sequenceName = "item_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "itemIdGenerator", sequenceName = "item_id_seq", initialValue = 1, allocationSize = 1)
     @ToStringExclude
     @HashCodeExclude
     private Integer id;
@@ -50,8 +49,8 @@ public class ItemEntity implements Serializable{
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "category_item",
-            joinColumns = {@JoinColumn(name = "item_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+        joinColumns = {@JoinColumn(name = "item_id")},
+        inverseJoinColumns = {@JoinColumn(name = "category_id")})
     @ToStringExclude
     @HashCodeExclude
     @EqualsExclude
@@ -123,12 +122,12 @@ public class ItemEntity implements Serializable{
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

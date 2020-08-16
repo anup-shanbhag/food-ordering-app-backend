@@ -18,6 +18,7 @@ public class CustomerDao {
 
     /**
      * Method takes a CustomerEntity and stores it in the database
+     *
      * @param customerEntity CustomerEntity to persist
      * @return persisted CustomerEntity
      */
@@ -30,6 +31,7 @@ public class CustomerDao {
 
     /**
      * Method takes a CustomerAuthEntity and stores it in the database
+     *
      * @param customerAuthEntity CustomerAuthEntity to persist
      * @return persisted CustomerAuthEntity
      */
@@ -40,14 +42,15 @@ public class CustomerDao {
 
     /**
      * Method takes a contact number and returns the matching CustomerEntity
+     *
      * @param contactNumber contact number
      * @return CustomerEntity
      */
-    public CustomerEntity getCustomerByContactNumber(final String contactNumber){
+    public CustomerEntity getCustomerByContactNumber(final String contactNumber) {
         try {
             return entityManager.createNamedQuery("Customer.ByContact", CustomerEntity.class)
-                    .setParameter("contactNumber", contactNumber)
-                    .getSingleResult();
+                .setParameter("contactNumber", contactNumber)
+                .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -55,14 +58,15 @@ public class CustomerDao {
 
     /**
      * Method takes an access token as a parameter and returns the matching CustomerAuthEntity
+     *
      * @param accessToken access token
      * @return CustomerAuthEntity
      */
     public CustomerAuthEntity getCustomerAuthenticationByAccessToken(String accessToken) {
         try {
             return entityManager.createNamedQuery("Customer.ByAuthToken", CustomerAuthEntity.class)
-                    .setParameter("accessToken", accessToken)
-                    .getSingleResult();
+                .setParameter("accessToken", accessToken)
+                .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -70,6 +74,7 @@ public class CustomerDao {
 
     /**
      * Method takes an updated CustomerEntity and merges the updates to the database
+     *
      * @param customerEntity Updated CustomerEntity
      * @return persisted CustomerEntity
      */

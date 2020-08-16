@@ -46,20 +46,20 @@ public class ItemControllerTest {
     public void shouldGetItemsByPopularity() throws Exception {
         final RestaurantEntity restaurantEntity = new RestaurantEntity();
         when(mockRestaurantService.restaurantByUUID("some_restaurant_id"))
-                .thenReturn(restaurantEntity);
+            .thenReturn(restaurantEntity);
 
         final ItemEntity itemEntity = new ItemEntity();
         final String itemId = UUID.randomUUID().toString();
         itemEntity.setUuid(itemId);
         itemEntity.setType(NON_VEG);
         when(mockItemService.getItemsByPopularity(restaurantEntity))
-                .thenReturn(Collections.singletonList(itemEntity));
+            .thenReturn(Collections.singletonList(itemEntity));
 
         final String responseString = mockMvc
-                .perform(get("/item/restaurant/some_restaurant_id")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+            .perform(get("/item/restaurant/some_restaurant_id")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
         final ItemListResponse itemListResponse = new ObjectMapper().readValue(responseString, ItemListResponse.class);
         assertEquals(itemListResponse.size(), 1);
@@ -72,12 +72,12 @@ public class ItemControllerTest {
     @Test
     public void shouldNotGetItemsByPopularityIfRestaurantDoesNOtExistForGivenId() throws Exception {
         when(mockRestaurantService.restaurantByUUID("some_restaurant_id"))
-                .thenThrow(new RestaurantNotFoundException("RNF-001", "No restaurant by this id"));
+            .thenThrow(new RestaurantNotFoundException("RNF-001", "No restaurant by this id"));
 
         mockMvc
-                .perform(get("/item/restaurant/some_restaurant_id").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("code").value("RNF-001"));
+            .perform(get("/item/restaurant/some_restaurant_id").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("code").value("RNF-001"));
     }
 
 }

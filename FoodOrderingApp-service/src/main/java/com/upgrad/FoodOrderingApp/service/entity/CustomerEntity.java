@@ -11,13 +11,13 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 @NamedQueries({
-        @NamedQuery(name = "Customer.ByContact", query = "SELECT C FROM CustomerEntity C WHERE C.contactNumber = :contactNumber")
+    @NamedQuery(name = "Customer.ByContact", query = "SELECT C FROM CustomerEntity C WHERE C.contactNumber = :contactNumber")
 })
 public class CustomerEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "customerIdGenerator")
-    @SequenceGenerator(name = "customerIdGenerator",sequenceName = "customer_id_seq", initialValue = 1, allocationSize = 1)
+    @SequenceGenerator(name = "customerIdGenerator", sequenceName = "customer_id_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id")
     @ToStringExclude
     @HashCodeExclude
@@ -61,7 +61,7 @@ public class CustomerEntity implements Serializable {
     private String salt;
 
     @OneToMany(mappedBy = "customer",
-                    fetch = FetchType.EAGER)
+        fetch = FetchType.EAGER)
     private List<AddressEntity> addresses;
 
     public Integer getId() {
@@ -138,12 +138,12 @@ public class CustomerEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this,obj,Boolean.FALSE);
+        return EqualsBuilder.reflectionEquals(this, obj, Boolean.FALSE);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this,Boolean.FALSE);
+        return HashCodeBuilder.reflectionHashCode(this, Boolean.FALSE);
     }
 
     @Override

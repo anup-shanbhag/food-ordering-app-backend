@@ -1,9 +1,8 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
 import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
-import com.upgrad.FoodOrderingApp.service.entity.PaymentEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,16 +18,17 @@ public class OrderDao {
 
     /**
      * Method takes a Customer Id as input and list all orders made by the customer
+     *
      * @param customerId Customer Id
      * @return List of OrderEntity
      */
     public List<OrderEntity> getOrdersForCustomer(final String customerId) {
-        return entityManager.createNamedQuery("Orders.ByCustomer", OrderEntity.class).setParameter("customerId",customerId).getResultList();
+        return entityManager.createNamedQuery("Orders.ByCustomer", OrderEntity.class).setParameter("customerId", customerId).getResultList();
     }
 
-    public OrderEntity saveOrder(OrderEntity orderEntity){
-         entityManager.persist(orderEntity);
-         return orderEntity;
+    public OrderEntity saveOrder(OrderEntity orderEntity) {
+        entityManager.persist(orderEntity);
+        return orderEntity;
     }
 
 
@@ -40,9 +40,9 @@ public class OrderDao {
     public List<OrderEntity> getOrdersByRestaurant(RestaurantEntity restaurant) {
         try {
             return entityManager.createNamedQuery("fetchOrdersByRestaurant", OrderEntity.class)
-                    .setParameter("restaurant", restaurant).getResultList();
+                .setParameter("restaurant", restaurant).getResultList();
         } catch (NoResultException nre) {
-System.out.printf("Ashik0 ");
+            System.out.printf("Ashik0 ");
             return null;
         }
     }

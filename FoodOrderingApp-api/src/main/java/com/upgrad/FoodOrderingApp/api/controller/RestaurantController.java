@@ -46,6 +46,7 @@ public class RestaurantController {
 
     /**
      * Method takes no parameter as input
+     *
      * @return ResponseEntity with List of restaurant with all the details
      * @throws UnexpectedException on any errors
      */
@@ -100,6 +101,7 @@ public class RestaurantController {
 
     /**
      * Method takes string as the input which if forms a part of any such restaurant name,the restaurant is included in the return list of restaurants
+     *
      * @return ResponseEntity with list of all of the Restaurants
      * @throws RestaurantNotFoundException if the name is empty
      */
@@ -154,11 +156,12 @@ public class RestaurantController {
 
     /**
      * Method takes category as the input which if served by a restaurant,the restaurant is included in the return list of restaurants
+     *
      * @return ResponseEntity with list of all of the Restaurants
      * @throws CategoryNotFoundException if the name is empty
      */
     @CrossOrigin
-    @RequestMapping(path="/category/{category_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/category/{category_id}", method = RequestMethod.GET)
     public ResponseEntity<RestaurantListResponse> getRestaurantByCategory(@PathVariable("category_id") String categoryId) throws CategoryNotFoundException {
         List<RestaurantList> restaurantList = new ArrayList<RestaurantList>();
         //Get Restaurants information
@@ -199,9 +202,9 @@ public class RestaurantController {
             restaurantList.add(restaurant);
         }
         restaurantList = restaurantList
-                .stream()
-                .sorted(Comparator.comparing(RestaurantList::getRestaurantName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList());
+            .stream()
+            .sorted(Comparator.comparing(RestaurantList::getRestaurantName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
         RestaurantListResponse restaurantListResponse = new RestaurantListResponse();
         restaurantListResponse.setRestaurants(restaurantList);
         return new ResponseEntity<>(restaurantListResponse, HttpStatus.OK);
@@ -209,11 +212,12 @@ public class RestaurantController {
 
     /**
      * Method takes category as the input which if served by a restaurant,the restaurant is included in the return list of restaurants
+     *
      * @return ResponseEntity with list of all of the Restaurants
      * @throws CategoryNotFoundException if the name is empty
      */
     @CrossOrigin
-    @RequestMapping(path="/{restaurant_id}",method = RequestMethod.GET)
+    @RequestMapping(path = "/{restaurant_id}", method = RequestMethod.GET)
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantById(@PathVariable("restaurant_id") String uuid) throws RestaurantNotFoundException, CategoryNotFoundException {
         RestaurantDetailsResponse restaurant = new RestaurantDetailsResponse();
         //Get Restaurants information
@@ -245,13 +249,13 @@ public class RestaurantController {
         List<CategoryList> categoryList = new ArrayList<>();
 
         // from the list of categories, categorize the restaurant items into the different categories
-        for (CategoryEntity ce: categoryEntityList) {
+        for (CategoryEntity ce : categoryEntityList) {
             CategoryList category = new CategoryList();
             category.setId(UUID.fromString(ce.getUuid()));
             category.setCategoryName(ce.getCategoryName());
-            List<ItemEntity> itemEntityList = itemService.getItemsByCategoryAndRestaurant(uuid,ce.getUuid());
+            List<ItemEntity> itemEntityList = itemService.getItemsByCategoryAndRestaurant(uuid, ce.getUuid());
             List<ItemList> itemListList = new ArrayList<>();
-            for (ItemEntity itemEntity: itemEntityList) {
+            for (ItemEntity itemEntity : itemEntityList) {
                 ItemList item = new ItemList();
                 item.setId(UUID.fromString(itemEntity.getUuid()));
                 item.setItemName(itemEntity.getItemName());
@@ -260,16 +264,16 @@ public class RestaurantController {
                 itemListList.add(item);
             }
             itemListList = itemListList
-                    .stream()
-                    .sorted(Comparator.comparing(ItemList::getItemName, String.CASE_INSENSITIVE_ORDER))
-                    .collect(Collectors.toList());
+                .stream()
+                .sorted(Comparator.comparing(ItemList::getItemName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
             category.setItemList(itemListList);
             categoryList.add(category);
         }
         categoryList = categoryList
-                .stream()
-                .sorted(Comparator.comparing(CategoryList::getCategoryName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList());
+            .stream()
+            .sorted(Comparator.comparing(CategoryList::getCategoryName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
         restaurant.categories(categoryList);
 
         return new ResponseEntity<RestaurantDetailsResponse>(restaurant, HttpStatus.OK);
@@ -278,14 +282,15 @@ public class RestaurantController {
 
     /**
      * Methods takes updated password information from the customer and updates it in the system
-     * @param authorization Customer's access token as request header param
+     *
+     * @param authorization  Customer's access token as request header param
      * @param customerRating decimal value between 1.0 and 5.0
-     * @param restaurantId restaurant id
+     * @param restaurantId   restaurant id
      * @return ResponseEntity with message
      * @throws AuthorizationFailedException on incorrect/invalid access token
-     * @throws RestaurantNotFoundException if id is empty, No restaurant by this id
-     * @throws InvalidRatingException rating not beween 1.0 to 5.0
-     * @throws UnexpectedException on any other errors
+     * @throws RestaurantNotFoundException  if id is empty, No restaurant by this id
+     * @throws InvalidRatingException       rating not beween 1.0 to 5.0
+     * @throws UnexpectedException          on any other errors
      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.PUT, path = "/{restaurant_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -301,7 +306,7 @@ public class RestaurantController {
         RestaurantEntity restaurant = restaurantService.restaurantByUUID(restaurantId);
 
         //call to update the rating
-        RestaurantEntity updatedRestaurant = restaurantService.updateRestaurantRating(restaurant,customerRating);
+        RestaurantEntity updatedRestaurant = restaurantService.updateRestaurantRating(restaurant, customerRating);
         RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse().id(UUID.fromString(restaurantId)).status("RESTAURANT RATING UPDATED SUCCESSFULLY");
         return new ResponseEntity<>(restaurantUpdatedResponse, HttpStatus.OK);
     }

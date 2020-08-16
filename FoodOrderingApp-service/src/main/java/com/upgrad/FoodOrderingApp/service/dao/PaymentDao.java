@@ -16,20 +16,21 @@ public class PaymentDao {
 
     /**
      * Method returns all available Payment Entities in the system
+     *
      * @return List of PaymentEntity
      */
     public List<PaymentEntity> getAllPaymentMethods() {
-        return entityManager.createNamedQuery("PaymentModes.All",PaymentEntity.class).getResultList();
+        return entityManager.createNamedQuery("PaymentModes.All", PaymentEntity.class).getResultList();
     }
 
-    public PaymentEntity getPaymentByUUID(String uuid){
-        try{
-            return entityManager.createNamedQuery("PaymentModes.getById",PaymentEntity.class)
-                    .setParameter("uuid", uuid)
-                    .getSingleResult();
+    public PaymentEntity getPaymentByUUID(String uuid) {
+        try {
+            return entityManager.createNamedQuery("PaymentModes.getById", PaymentEntity.class)
+                .setParameter("uuid", uuid)
+                .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
-        }
+    }
 
 }

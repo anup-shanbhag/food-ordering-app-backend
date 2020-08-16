@@ -26,20 +26,19 @@ public class PaymentController {
 
     @CrossOrigin
     @RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaymentListResponse> getPaymentModes(){
+    public ResponseEntity<PaymentListResponse> getPaymentModes() {
 
         // Fetch all payment modes as a list of Payment Entities from the database
         List<PaymentEntity> paymentEntities = paymentService.getAllPaymentMethods();
 
         // Map lis tof payment entities to Payment List Response object
         PaymentListResponse response = new PaymentListResponse();
-        paymentEntities.forEach( paymentEntity -> response.addPaymentMethodsItem(new PaymentResponse().id(UUID.fromString(paymentEntity.getUuid())).paymentName(paymentEntity.getPaymentName())));
+        paymentEntities.forEach(paymentEntity -> response.addPaymentMethodsItem(new PaymentResponse().id(UUID.fromString(paymentEntity.getUuid())).paymentName(paymentEntity.getPaymentName())));
 
         // Return response with right HttpStatus
-        if(response.getPaymentMethods().isEmpty()){
+        if (response.getPaymentMethods().isEmpty()) {
             return new ResponseEntity<PaymentListResponse>(response, HttpStatus.NO_CONTENT);
-        }
-        else{
+        } else {
             return new ResponseEntity<PaymentListResponse>(response, HttpStatus.OK);
         }
     }

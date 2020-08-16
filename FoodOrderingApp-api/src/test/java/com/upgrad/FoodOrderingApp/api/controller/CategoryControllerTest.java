@@ -59,9 +59,9 @@ public class CategoryControllerTest {
         when(mockCategoryService.getCategoryById("sampleCategoryId")).thenReturn(categoryEntity);
 
         final String response = mockMvc
-                .perform(get("/category/sampleCategoryId").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+            .perform(get("/category/sampleCategoryId").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
         final CategoryDetailsResponse categoryDetailsResponse = new ObjectMapper().readValue(response, CategoryDetailsResponse.class);
 
@@ -78,12 +78,12 @@ public class CategoryControllerTest {
     @Test
     public void shouldNotGetCategoryByidIfCategoryIdIsEmpty() throws Exception {
         when(mockCategoryService.getCategoryById(anyString()))
-                .thenThrow(new CategoryNotFoundException("CNF-001", "Category id field should not be empty"));
+            .thenThrow(new CategoryNotFoundException("CNF-001", "Category id field should not be empty"));
 
         mockMvc
-                .perform(get("/category/emptyString").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("code").value("CNF-001"));
+            .perform(get("/category/emptyString").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("code").value("CNF-001"));
         verify(mockCategoryService, times(1)).getCategoryById(anyString());
     }
 
@@ -92,12 +92,12 @@ public class CategoryControllerTest {
     @Test
     public void shouldNotGetCategoryByIdIfCategoryDoesNotExistAgainstGivenId() throws Exception {
         when(mockCategoryService.getCategoryById("someCategory"))
-                .thenThrow(new CategoryNotFoundException("CNF-002", "No category by this id"));
+            .thenThrow(new CategoryNotFoundException("CNF-002", "No category by this id"));
 
         mockMvc
-                .perform(get("/category/someCategory").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("code").value("CNF-002"));
+            .perform(get("/category/someCategory").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("code").value("CNF-002"));
         verify(mockCategoryService, times(1)).getCategoryById("someCategory");
     }
 
@@ -112,9 +112,9 @@ public class CategoryControllerTest {
         when(mockCategoryService.getAllCategoriesOrderedByName()).thenReturn(Collections.singletonList(categoryEntity));
 
         final String response = mockMvc
-                .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+            .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
         final CategoriesListResponse categoriesListResponse = new ObjectMapper().readValue(response, CategoriesListResponse.class);
         assertEquals(categoriesListResponse.getCategories().size(), 1);
@@ -129,9 +129,9 @@ public class CategoryControllerTest {
         when(mockCategoryService.getAllCategoriesOrderedByName()).thenReturn(Collections.emptyList());
 
         final String response = mockMvc
-                .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+            .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
         final CategoriesListResponse categoriesListResponse = new ObjectMapper().readValue(response, CategoriesListResponse.class);
         assertNull(categoriesListResponse.getCategories());

@@ -4,7 +4,6 @@ import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
 import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
@@ -34,8 +33,9 @@ public class ItemService {
 
     /**
      * Method takes restaurant Uuid, category Uuid  and return ItemEntity List from the database
+     *
      * @param restaurantUuid restaurant uuid to retrieve restaurant
-     * @param categoryUuid category uuid to retrieve item Entity
+     * @param categoryUuid   category uuid to retrieve item Entity
      * @return ItemEntity list of restaurantEntity
      */
     public List<ItemEntity> getItemsByCategoryAndRestaurant(String restaurantUuid, String categoryUuid) {
@@ -44,31 +44,32 @@ public class ItemService {
         //get items in restaurant
         Set<ItemEntity> restaurantItems = restaurant.getItems();
 
-        List<ItemEntity> filteredRestaurantItems = restaurantItems.stream().filter( restaurantItem ->
-                restaurantItem.getCategories().stream()
-                        .anyMatch( categoryEntity -> categoryEntity.getUuid().equals(categoryUuid)))
-                .sorted(Comparator.comparing(ItemEntity::getItemName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList());
+        List<ItemEntity> filteredRestaurantItems = restaurantItems.stream().filter(restaurantItem ->
+            restaurantItem.getCategories().stream()
+                .anyMatch(categoryEntity -> categoryEntity.getUuid().equals(categoryUuid)))
+            .sorted(Comparator.comparing(ItemEntity::getItemName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
         return filteredRestaurantItems;
     }
 
     /**
      * Method takes Item id and return ItemEntity from the database
+     *
      * @param uuid item UUID to be retrieved from database
      * @return ItemEntity of matching item uuid
      */
     public ItemEntity getItemById(String uuid) throws ItemNotFoundException {
         ItemEntity itemEntity = itemDao.getItemById(uuid);
-        if(itemEntity == null) {
+        if (itemEntity == null) {
             throw new ItemNotFoundException(INF_001.getCode(), INF_001.getDefaultMessage());
-        }
-        else{
+        } else {
             return itemEntity;
         }
     }
 
     /**
      * Method takes restaurantEntity and return ItemEntity List from the database
+     *
      * @param restaurantEntity restaurantEntity to retrieve popular items
      * @return ItemEntity list of restaurantEntity
      */
@@ -78,7 +79,7 @@ public class ItemService {
         List<ItemEntity> itemEntityList = new ArrayList<>();
         for (OrderEntity orderEntity : orderDao.getOrdersByRestaurant(restaurantEntity)) {
             orderEntity.getItems().forEach(items ->
-                    itemEntityList.add(items.getItem())
+                itemEntityList.add(items.getItem())
             );
         }
 
@@ -91,7 +92,7 @@ public class ItemService {
 
         // Convert unsorted HashMap to list for sorting
         List<Map.Entry<String, Integer>> unsortedItemCountList =
-                new LinkedList<Map.Entry<String, Integer>>(unsortedItemCountMap.entrySet());
+            new LinkedList<Map.Entry<String, Integer>>(unsortedItemCountMap.entrySet());
 
         // Sort the list
         unsortedItemCountList.sort(new Comparator<Map.Entry<String, Integer>>() {
@@ -104,7 +105,7 @@ public class ItemService {
         // Retrieve itemEntity from database
         List<ItemEntity> sortedItemEntityList = new ArrayList<>();
         unsortedItemCountList.forEach(list ->
-                sortedItemEntityList.add(itemDao.getItemById(list.getKey()))
+            sortedItemEntityList.add(itemDao.getItemById(list.getKey()))
         );
 
         return sortedItemEntityList;

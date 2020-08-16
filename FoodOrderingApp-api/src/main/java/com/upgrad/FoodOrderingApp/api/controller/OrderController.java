@@ -42,11 +42,12 @@ public class OrderController {
 
     /**
      * Method takes customer's access token and a coupon name  as inputs and the returns the coupon details
+     *
      * @param headerParam Customer's access token as request paremeter
-     * @param couponName Coupon name
+     * @param couponName  Coupon name
      * @return ResponseEntity with details of the matching coupon
      * @throws AuthorizationFailedException on incorrect/invalid access token
-     * @throws CouponNotFoundException on incorrect/invalid/non-existent coupon name
+     * @throws CouponNotFoundException      on incorrect/invalid/non-existent coupon name
      */
     @CrossOrigin
     @RequestMapping(path = "/coupon/{coupon_name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,6 +70,7 @@ public class OrderController {
 
     /**
      * Method takes customers access token and retrieves a list of all of the customer's orders
+     *
      * @param headerParam Customer's access token as request header parameter
      * @return ResponseEntity with list of all of the customer's orders
      * @throws AuthorizationFailedException on invalid/incorrect access token
@@ -148,31 +150,28 @@ public class OrderController {
         produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") final String authorization,
                                                        @RequestBody(required = false) final SaveOrderRequest saveOrderRequest)
-            throws AuthorizationFailedException, AddressNotFoundException, RestaurantNotFoundException, CouponNotFoundException, PaymentMethodNotFoundException, ItemNotFoundException {
+        throws AuthorizationFailedException, AddressNotFoundException, RestaurantNotFoundException, CouponNotFoundException, PaymentMethodNotFoundException, ItemNotFoundException {
         final String accessToken = AppUtils.getBearerAuthToken(authorization);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setUuid(UUID.randomUUID().toString());
         orderEntity.setBill(saveOrderRequest.getBill().doubleValue());
-        if(saveOrderRequest.getCouponId()!=null){
+        if (saveOrderRequest.getCouponId() != null) {
             CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
             orderEntity.setCoupon(couponEntity);
-        }
-        else{
+        } else {
             orderEntity.setCoupon(null);
         }
-        if(saveOrderRequest.getDiscount()!=null){
+        if (saveOrderRequest.getDiscount() != null) {
             orderEntity.setDiscount(saveOrderRequest.getDiscount().doubleValue());
-        }
-        else{
+        } else {
             orderEntity.setDiscount(BigDecimal.ZERO.doubleValue());
         }
         orderEntity.setDate(LocalDateTime.now());
-        if(saveOrderRequest.getPaymentId()!=null){
+        if (saveOrderRequest.getPaymentId() != null) {
             PaymentEntity paymentEntity = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
             orderEntity.setPayment(paymentEntity);
-        }
-        else{
+        } else {
             orderEntity.setPayment(null);
         }
         orderEntity.setCustomer(customerEntity);

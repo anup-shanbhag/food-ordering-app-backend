@@ -38,9 +38,9 @@ public class RestaurantService {
         if (categoryUuid.trim().length() <= 0) {  //if the category uuid id is empty throw error
             throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
-            CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);
-        if(categoryEntity==null){    //if category not found throw error
-            throw new CategoryNotFoundException(CNF_002.getCode(),CNF_002.getDefaultMessage());
+        CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);
+        if (categoryEntity == null) {    //if category not found throw error
+            throw new CategoryNotFoundException(CNF_002.getCode(), CNF_002.getDefaultMessage());
         }
 
         return restaurantDao.restaurantByCategory(categoryEntity);
@@ -51,7 +51,7 @@ public class RestaurantService {
             throw new RestaurantNotFoundException(RNF_002.getCode(), RNF_002.getDefaultMessage());
         }
         RestaurantEntity restaurantEntity = restaurantDao.getRestaurantByID(uuid);
-        if(restaurantEntity == null){   //if restaurant not found, throw error
+        if (restaurantEntity == null) {   //if restaurant not found, throw error
             throw new RestaurantNotFoundException(RNF_001.getCode(), RNF_001.getDefaultMessage());
         }
         return restaurantEntity;
@@ -59,10 +59,10 @@ public class RestaurantService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurant, Double customerRating) throws InvalidRatingException {
-            if (customerRating < 1.0 || customerRating > 5.0) {
-                throw new InvalidRatingException(IRE_001.getCode(), IRE_001.getDefaultMessage());
-            }
-            //calculate new average rating.
+        if (customerRating < 1.0 || customerRating > 5.0) {
+            throw new InvalidRatingException(IRE_001.getCode(), IRE_001.getDefaultMessage());
+        }
+        //calculate new average rating.
         Double newAverageRating = ((restaurant.getCustomerRating()) * ((double) restaurant.getNumberOfCustomersRated()) + customerRating) / ((double) restaurant.getNumberOfCustomersRated() + 1);
         restaurant.setCustomerRating(newAverageRating);
         restaurant.setNumberCustomersRated(restaurant.getNumberOfCustomersRated() + 1); // update the number of customers who gave rating
